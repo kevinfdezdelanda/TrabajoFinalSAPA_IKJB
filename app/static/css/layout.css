@@ -1,0 +1,34 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body{
+    background-color: #262628;
+    color: white !important;
+    font-family: 'Arial';
+}
+
+.error_404{
+    display:flex;
+    flex-direction: column;
+    gap: 10px;
+    justify-content: center; /* Centra horizontalmente */
+    align-items: center;     /* Centra verticalmente */
+    height: 100vh;
+}
+
+.error_404 div{
+    width: 40%;
+    min-width: 500px;
+}
+
+.error_404 h1{
+    font-size: 100px;
+    color: #73D7DC;
+}
+.error_404 h2{
+    font-size: 30px;
+    color: #488D90;
+}
