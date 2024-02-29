@@ -1,8 +1,8 @@
-# Nombre del Proyecto de Especialización en IA y Big Data
+# Proyecto final Sapa Miar Pria
 
 ## Descripción
 
-Aplicación Web para Chatbot manejado con Procesamiento de Voz, Generación de imágenes basado en texto y Sistema de Acceso con Identificación Facial.
+Aplicación Web de Chatbot con Procesamiento de Voz, Generación de Imágenes y Sistema de Acceso mediante Identificación Facial
 
 ## Características
 
