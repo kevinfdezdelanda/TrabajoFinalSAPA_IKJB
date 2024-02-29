@@ -8,8 +8,8 @@
 <body>
     <div id="chatbox">
         <div id="messages"></div>
-        <input type="text" id="userInput" placeholder="Say something..." autocomplete="off"/>
-        <button onclick="getReply()">Send</button>
+        <input type="text" id="userInput" placeholder="Hi, how can I help you" autocomplete="off" onkeypress="handleKeyPress(event)"/>
+        <button id="sendButton" onclick="getReply()">Send</button>
     </div>
 
     <script>
@@ -19,14 +19,28 @@
                 let msg = `<div class='userMessage'>You: ${userText}</div>`;
                 document.getElementById("messages").innerHTML += msg;
                 document.getElementById("userInput").value = '';
+                document.getElementById("userInput").disabled = true;
+                document.getElementById("sendButton").disabled = true;
 
                 fetch(`/get?msg=${userText}`).then(response => response.json()).then(data => {
                     let botReply = `<div class='botMessage'>BlenderBot: ${data}</div>`;
                     document.getElementById("messages").innerHTML += botReply;
+                    document.getElementById("userInput").disabled = false;
+                    document.getElementById("sendButton").disabled = false;
+                    document.getElementById("userInput").focus();
                 }).catch(() => {
                     let botReply = `<div class='botMessage'>BlenderBot: I'm having trouble responding right now.</div>`;
                     document.getElementById("messages").innerHTML += botReply;
+                    document.getElementById("userInput").disabled = false;
+                    document.getElementById("sendButton").disabled = false;
+                    document.getElementById("userInput").focus();
                 });
+            }
+        }
+
+        function handleKeyPress(event) {
+            if (event.keyCode === 13) { // 13 is the enter key
+                getReply();
             }
         }
     </script>
