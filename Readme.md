@@ -29,6 +29,11 @@ pip install flask
 ## Ejecucion en local
 
 ```bash
-cd .\TrabajoFinalSAPA_IKJB
-python .\app\app.py
+flask --app flaskr run --debug
+```
+
+## Inicializar BBDD
+
+```bash
+flask --app app init-db
 ```

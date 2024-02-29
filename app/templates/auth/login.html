@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Log In{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+    
+
+    
+
+    <form id="registro_form" method="post">
+        <label for="username">Nombre de Usuario:</label>
+        <input type="text" id="username" name="username" required>
+    
+        <video id="video" width="640" height="480" autoplay></video>
+        <button type="button" id="botonCaptura">Capturar Foto</button>
+        <canvas id="canvas" width="640" height="480" style="display:none;"></canvas>
+        <input type="hidden" name="imagen" id="imagen">
+    
+        <input type="submit" value="Enviar">
+    </form>
+    
+
+    <script>
+        document.getElementById('botonCaptura').addEventListener('click', function() {
+            var video = document.getElementById('video');
+            var canvas = document.getElementById('canvas');
+            var context = canvas.getContext('2d');
+            context.drawImage(video, 0, 0, 640, 480);
+        
+            var imagenDataUrl = canvas.toDataURL('image/png');
+            canvas.style.display = 'inline-block';
+            document.getElementById('imagen').value = imagenDataUrl;
+        });
+        
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(function(stream) {
+                var video = document.getElementById('video');
+                video.srcObject = stream;
+            })
+            .catch(function(error) {
+                console.log("Error al acceder a la cámara: " + error);
+            });
+    </script>
+{% endblock %}
