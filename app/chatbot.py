@@ -9,9 +9,15 @@ from app.db import get_db
 
 bp = Blueprint('chatbot', __name__)
 
+
+# Define el nombre del modelo que se va a utilizar. En este caso, es 'facebook/blenderbot-400M-distill'
 model_name = 'facebook/blenderbot-400M-distill'
+# Crea una instancia del tokenizador para BlenderBot a partir del modelo preentrenado.
 tokenizer = BlenderbotTokenizer.from_pretrained(model_name)
+# Carga el modelo de generación condicional de BlenderBot a partir del modelo preentrenado.
 model = BlenderbotForConditionalGeneration.from_pretrained(model_name)
+
+# Palabras prohibidas
 prohibited_keywords = [
     "idiot", "moron", "dumb", "stupid", "imbecile", "fool", "jerk", "asshole", "retard", "twat",
     "racist", "nazi", "bigot", "supremacist", "xenophobe", "klansman", "ethnocentric", "jingoist", "racial", "sectarian",
@@ -35,15 +41,28 @@ def index():
     # ).fetchall()
     return render_template('chatbot/index.html')
 
-@bp.route('/get')
-def get_bot_response():
-    user_input = request.args.get('msg')
+@bp.route('/get')  # Define una ruta en el servidor web que escucha las solicitudes GET en la URL '/get'.
+def get_bot_response():  # Define la función que maneja las solicitudes en esta ruta.
+    user_input = request.args.get('msg')  # Obtiene el mensaje del usuario desde los argumentos de la URL.
+
+    # Verifica si el mensaje del usuario contiene alguna palabra prohibida.
     if any(keyword in user_input.lower() for keyword in prohibited_keywords):
+        # Si encuentra una palabra prohibida, devuelve un mensaje de error.
         return "I'm sorry, but I prefer not to talk about these topics."
+
+    # Prepara el mensaje del usuario para el modelo transformándolo en el formato adecuado.
     inputs = tokenizer([user_input], return_tensors='pt')
+
+    # Pasa el mensaje procesado al modelo y genera una respuesta.
     result = model.generate(**inputs, max_length=40)
+
+    # Decodifica la respuesta generada por el modelo para convertirla en texto legible.
     reply = tokenizer.decode(result[0], skip_special_tokens=True)
+
+    # Devuelve la respuesta en formato JSON.
     return jsonify(reply)
 
+# Verifica si el script se ejecuta como programa principal y no como módulo importado.
 if __name__ == "__main__":
+    # Ejecuta la aplicación Flask en modo de depuración.
     bp.run(debug=True)
