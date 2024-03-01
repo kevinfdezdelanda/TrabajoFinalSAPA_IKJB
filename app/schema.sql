@@ -1,11 +1,7 @@
 DROP TABLE IF EXISTS user;
 
-CREATE TABLE user(
- idUser INT AUTO_INCREMENT,
+CREATE TABLE user (
+ idUser INTEGER PRIMARY KEY,
  name VARCHAR(75) NOT NULL,
- photo LONGBLOB,
- 
- CONSTRAINT pk_user_idUser PRIMARY KEY(idUser)
+ photo LONGBLOB
 );
-
-select * from user;

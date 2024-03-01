@@ -29,7 +29,7 @@ pip install flask
 ## Ejecucion en local
 
 ```bash
-flask --app flaskr run --debug
+flask --app app run --debug
 ```
 
 ## Inicializar BBDD
