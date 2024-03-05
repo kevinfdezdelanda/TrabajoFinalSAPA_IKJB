@@ -14,7 +14,6 @@ embeddings_dataset = load_dataset("Matthijs/cmu-arctic-xvectors", split="validat
 voz = 5000
 # Voz embedding a tensor
 speaker_embedding = torch.tensor(embeddings_dataset[voz]["xvector"]).unsqueeze(0)
-# Conversión
 
 # Este bloque es solo para pruebas. El texto a generar lo recibirá del chatbot.
 # Si la generación falla directamente no generaría voz. Lo manejaría de otra manera.

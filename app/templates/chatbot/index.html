@@ -18,6 +18,8 @@
         <button id="sendButton" onclick="getReply()">Send</button>
     </div>
 
+    
+
     <!-- Scripts de JavaScript para manejar la lógica del chat -->
     <script>
         // Función que maneja la obtención y muestra de la respuesta del bot
@@ -37,8 +39,12 @@
                 // Realiza una solicitud al servidor para obtener la respuesta del bot
                 fetch(`/get?msg=${userText}`).then(response => response.json()).then(data => {
                     // Muestra la respuesta del bot en la interfaz
-                    let botReply = `<div class='botMessage'>BlenderBot: ${data}</div>`;
+                    let botReply = `<div class='botMessage'>BlenderBot: ${data.text}</div>`;
                     document.getElementById("messages").innerHTML += botReply;
+
+                    let audioElement = new Audio(data.audio);
+                    audioElement.play();
+
                     // Rehabilita el campo de entrada y el botón de enviar
                     document.getElementById("userInput").disabled = false;
                     document.getElementById("sendButton").disabled = false;

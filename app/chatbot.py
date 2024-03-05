@@ -1,8 +1,13 @@
 from flask import (
-    Blueprint, flash, g, redirect, render_template, request, url_for, jsonify, Flask
+    Blueprint, flash, g, redirect, render_template, request, url_for, jsonify, Flask, send_from_directory
 )
-from transformers import BlenderbotTokenizer, BlenderbotForConditionalGeneration
+from transformers import BlenderbotTokenizer, BlenderbotForConditionalGeneration, pipeline
 from werkzeug.exceptions import abort
+from datasets import load_dataset
+import torch
+import soundfile as sf
+import time
+from urllib.parse import quote
 
 # from app.auth import login_required
 from app.db import get_db
@@ -16,6 +21,17 @@ model_name = 'facebook/blenderbot-400M-distill'
 tokenizer = BlenderbotTokenizer.from_pretrained(model_name)
 # Carga el modelo de generación condicional de BlenderBot a partir del modelo preentrenado.
 model = BlenderbotForConditionalGeneration.from_pretrained(model_name)
+
+# Síntesis voz
+
+# Modelo descargado por pipeline
+synthesiser = pipeline("text-to-speech", "microsoft/speecht5_tts")
+# Datasets de voces
+embeddings_dataset = load_dataset("Matthijs/cmu-arctic-xvectors", split="validation")
+# Índice del embedding de voz utilizado
+voz = 5000
+# Voz embedding a tensor
+speaker_embedding = torch.tensor(embeddings_dataset[voz]["xvector"]).unsqueeze(0)
 
 # Palabras prohibidas
 prohibited_keywords = [
@@ -58,9 +74,22 @@ def get_bot_response():  # Define la función que maneja las solicitudes en esta
 
     # Decodifica la respuesta generada por el modelo para convertirla en texto legible.
     reply = tokenizer.decode(result[0], skip_special_tokens=True)
-
+    
+    # Voz
+    speech = synthesiser(reply, forward_params={"speaker_embeddings": speaker_embedding})
+    
+    ts = str(time.time()).replace(".", "-")
+    
+    nombre_fichero = f"app/wav/{ts}.wav"
+    
+    sf.write(nombre_fichero, speech["audio"], samplerate=speech["sampling_rate"])
+    
     # Devuelve la respuesta en formato JSON.
-    return jsonify(reply)
+    return jsonify({"text": reply, "audio": nombre_fichero})
+
+@bp.route('/app/wav/<path:filename>')
+def serve_wav(filename):
+    return send_from_directory('/app/wav/', filename)
 
 # Verifica si el script se ejecuta como programa principal y no como módulo importado.
 if __name__ == "__main__":
