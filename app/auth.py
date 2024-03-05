@@ -30,17 +30,17 @@ def register():
         error = None
 
         if not username:
-            error = 'Username is required.'
+            error = 'Nombre de usuario requerido'
         elif not img_file:
-            error = 'img is required.'
+            error = 'Img requerida'
+
+        if username and existe_usuario(username):
+           error = f"Usuario ya registrado"
 
         if error is None:
             
-            # print(img_file)
             try:    
                 img_stream = img_file.read()
-
-                ruta_img = os.path.join(path, username+".png")
 
                 # Convertir los datos binarios a un array de NumPy para OpenCV
                 np_img = np.frombuffer(img_stream, np.uint8)
@@ -76,7 +76,7 @@ def register():
 
 
             except db.IntegrityError:
-                error = f"User {username} is already registered."
+                error = f"Usuario ya registrado"
                 
         flash(error)
 
@@ -92,15 +92,15 @@ def login():
         error = None
 
         if not username:
-            error = 'Username is required.'
+            error = 'Nombre de usuario requerido'
         elif not img_file:
-            error = 'img is required.'
+            error = 'Img requerida'
         print(img_file)
         if error is None:
             img_db, id = obtener_foto_usuario(username)
             
             if img_db is None:
-                error = 'Incorrect username.'
+                error = 'Usuario no encontrado'
             else:
                 img_stream = img_file.read()
 
@@ -123,7 +123,7 @@ def login():
                     # Si la compatibilidad es mayor de 0.8 hara el login
                     if comp >= 0.80:
                         session.clear()
-                        session['user_id'] = 44
+                        session['username'] = username
                         return redirect(url_for('index'))
                     else:
                         error = 'Reconocimiento facial fallido'
@@ -134,12 +134,12 @@ def login():
 
 @bp.before_app_request
 def load_logged_in_user():
-    user_id = session.get('user_id')
+    username = session.get('username')
 
-    if user_id is None:
+    if username is None:
         g.user = None
     else:
-        g.user = user_id
+        g.user = username
         
 @bp.route('/logout')
 def logout():
@@ -250,3 +250,17 @@ def obtener_foto_usuario(username):
     finally:
         cursor.close()
 
+def existe_usuario(username):
+    # Conectarse a la base de datos
+    db = get_db()
+    cursor = db.cursor()
+    
+    # Realizar la consulta
+    cursor.execute("SELECT * FROM user WHERE name = ?", (username,))
+    user = cursor.fetchone()
+
+    # Si 'user' no es None, entonces el usuario ya existe
+    if user:
+        return True
+    else:
+        return False
