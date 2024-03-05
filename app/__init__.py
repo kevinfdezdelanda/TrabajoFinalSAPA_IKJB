@@ -29,7 +29,7 @@ def query_string():
     print(request.args.get('param1'))
     return "ok"
 
-app.register_blueprint(auth.bp)
+# app.register_blueprint(auth.bp)
 
 app.register_blueprint(chatbot.bp)
 app.add_url_rule('/', endpoint='index')
