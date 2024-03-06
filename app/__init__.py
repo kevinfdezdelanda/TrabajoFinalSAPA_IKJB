@@ -33,6 +33,7 @@ def query_string():
     print(request.args.get('param1'))
     return "ok"
 
+# Maneja los ficheros wav. Creo que es solo para el entorno de develop, sino las peticiones GET a los fichero WAV no funcionan.
 @app.route('/app/wav/<path:filename>')
 def serve_wav(filename):
     return send_from_directory('wav', filename)

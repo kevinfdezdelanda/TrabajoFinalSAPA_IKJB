@@ -1,5 +1,5 @@
 from flask import (
-    Blueprint, flash, g, redirect, render_template, request, url_for, jsonify, Flask, send_from_directory
+    Blueprint, flash, g, redirect, render_template, request, url_for, jsonify, Flask
 )
 from transformers import BlenderbotTokenizer, BlenderbotForConditionalGeneration, pipeline
 from werkzeug.exceptions import abort
@@ -76,16 +76,19 @@ def get_bot_response():  # Define la función que maneja las solicitudes en esta
     # Decodifica la respuesta generada por el modelo para convertirla en texto legible.
     reply = tokenizer.decode(result[0], skip_special_tokens=True)
     
-    # Voz
+    # Transforma el texto obtenido del chatbot a voz
     speech = synthesiser(reply, forward_params={"speaker_embeddings": speaker_embedding})
     
+    # Timestamp, reemplazando el punto por -
     ts = str(time.time()).replace(".", "-")
     
+    # Nombre del fichero de salida
     nombre_fichero = f"app/wav/{ts}.wav"
     
+    # Guardado del fichero de salida
     sf.write(nombre_fichero, speech["audio"], samplerate=speech["sampling_rate"])
     
-    # Devuelve la respuesta en formato JSON.
+    # Devuelve la respuesta del chatbot y la ruta al fichero de voz en formato JSON.
     return jsonify({"text": reply, "audio": nombre_fichero})
 
 
