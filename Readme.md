@@ -25,6 +25,10 @@ Proporciona instrucciones detalladas sobre cómo instalar y configurar el proyec
 git clone https://github.com/kevinfdezdelanda/TrabajoFinalSAPA_IKJB.git
 cd .\TrabajoFinalSAPA_IKJB
 pip install flask
+pip install opencv_python
+pip install matplotlib 
+pip install mtcnn
+pip install tensorflow
 ```
 ## Ejecucion en local
 

@@ -10,6 +10,13 @@ body{
     font-family: 'Arial';
 }
 
+nav h1{
+    font-size: 3rem;
+    width: 100%;
+    text-align: center;
+    margin: 2rem 0;
+}
+
 .error_404{
     display:flex;
     flex-direction: column;
@@ -33,87 +40,176 @@ body{
     color: #488D90;
 }
 
+/** Registro-login **/
 
-/*BADR*/
-
-html, body {
-    height: 100%;
-    margin: 0;
-    font-family: Arial, sans-serif;
+.registro-login {
+    display: flex;
+    justify-content: center;
+    align-items: center;;
+    flex-direction: column;
 }
 
-#chatbox {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(135deg, #0a0f0b 0%, #3a3f44 25%, #20242a 50%, #2c3038 75%, #1a1f25 100%);
-    color: white;
+.registro-login  h2{
+    font-size: 2.5rem;
+    margin-bottom: .5rem;
+    margin-left: 1rem;
+}
+
+.registro-login  a{
+    color: #BEBEBE !important;
+}
+
+.registro-login .div-form{
+    border: 3px solid #2F2F31;
+    border-radius: 2rem;
+    padding: 2rem 8rem;
+    max-width: 90rem;
+}
+
+.registro-login .div-form form, .registro-login .div-form form > div{
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    box-sizing: border-box;
-    padding: 10px;
 }
 
-#messages {
-    overflow-y: auto;
+.registro-login .div-form form > div{
+    margin-bottom: 1rem;
+}
+
+.registro-login .div-form form label{
+    color: #BEBEBE;
+    padding-bottom: 1rem;
+}
+
+.registro-login .div-form form input{
+    background: transparent;
+    border: 2px solid #3E3E42;
+    border-radius: 1rem;
+    padding: 0.8rem;
+    color: white;
+}
+
+.registro-login .div-form form video{
+    background: black;
+    border-radius: 1rem;
+}
+
+.registro-login .cam > div{
+    position: relative;
+}
+
+.registro-login .cam > div button{
+    position: absolute;
+    bottom: 1rem;
+    left: calc(50% - 3.5rem);
+    width: 7rem;
+    height: 2rem;
+    
+}
+
+.registro-login .cam1 img{
+    position: absolute;
+}
+
+.registro-login .cam1 .esquina{
+    height: 2rem;
+}
+
+/**.registro-login .cam video, .registro-login .cam canvas{
+    width: 800;
+    height: 480;
+}**/
+
+.registro-login .cam1 .esquina-sup-izq{
+    top: 2%;
+    left:2%;
+}
+.registro-login .cam1 .esquina-sup-derch{
+    top: 2%;
+    left:93%;
+    rotate: 90deg
+}
+.registro-login .cam1 .esquina-inf-izq{
+    top: 80%;
+    left: 2%;
+    rotate: -90deg
+}
+.registro-login .cam1 .esquina-inf-derch{
+    top: 80%;
+    left: 93%;
+    rotate: 180deg
+}
+.registro-login .cam1 .centro{
+    width: 14rem;
+    top: 20%;
+    left: calc(50% - 7rem);
+}
+
+.registro-login .submit{
+    background-color: #73D7DC !important;
+    font-weight: 700;
+    width: 8rem;
+    border-color: #73D7DC !important;
+    padding: 0.5rem !important;
+    margin:auto;
+}
+
+.div-form .flash{
+    color: red;
     margin-bottom: 10px;
 }
 
-.userMessage, .botMessage {
-    padding: 5px 10px;
-    border-radius: 5px;
-    margin: 5px 0;
-    display: inline-block;
-    width: calc(100% - 20px);
-}
 
-.userMessage {
-    background-color: #556270;
-    text-align: right;
-}
-
-.botMessage {
-    background-color: #4e4a59;
-    text-align: left;
-}
-
-input[type="text"] {
-    width: calc(100% - 60px);
-    padding: 10px;
-    margin-right: 10px;
-    border: none;
-    border-radius: 5px;
-}
-
-button {
-    width: 40px;
-    border: none;
-    border-radius: 5px;
-    background-color: #8c9eab;
-    color: white;
+/** Bubble user **/
+.user-bubble {
+    position: fixed;
+    top: 5%;
+    left: 95%;
+    background-color: #73D7DC;
+    border-radius: 50%;
+    width: 4rem;
+    height: 4rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     cursor: pointer;
 }
 
-button:disabled {
-    background-color: #697478;
+.username {
+    color: #262628;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    max-width: 80px;
+    /*! display: block; */
+    /*! width: 100%; */
+    /*! height: 100%; */
+    font-weight: 100;
 }
 
-
-#goBackButton {
+.dropdown-content {
+    display: none;
     position: absolute;
-    top: 10px;
-    left: 10px;
-    padding: 5px 20px;
-    background-color: #333;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    white-space: nowrap; 
+    background-color: #f9f9f9;
+    min-width: 7rem;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    /*! padding: 12px 16px; */
+    z-index: 1;
+    top: 3.9rem;
 }
 
-#goBackButton:hover {
-    background-color: #555;
+.user-bubble:hover .dropdown-content {
+    display: block;
+}
+
+.dropdown-content a {
+    color: black;
+    padding: 10px 10px;
+    text-decoration: none;
+    display: block;
+    font-size: .8rem;
+    text-align: center;
+}
+
+.dropdown-content a:hover {
+    background-color: #f1f1f1;
 }

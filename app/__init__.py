@@ -10,6 +10,10 @@ app.config.from_mapping(
     DATABASE=os.path.join(app.instance_path, 'flaskr.sqlite'),
 )
 
+@app.errorhandler(404)
+def page_not_found(error):
+    return render_template('404.html'), 404
+
 # ensure the instance folder exists
 try:
     os.makedirs(app.instance_path)
@@ -43,5 +47,5 @@ db.init_app(app)
 
 if __name__ == '__main__':
     app.add_url_rule('/query_string', view_func=query_string)
-    app.register_error_handler(404, pagina_no_encontrada)
+    # app.register_error_handler(404, pagina_no_encontrada)
     app.run(debug=True)
