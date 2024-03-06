@@ -25,10 +25,21 @@ Proporciona instrucciones detalladas sobre cómo instalar y configurar el proyec
 git clone https://github.com/kevinfdezdelanda/TrabajoFinalSAPA_IKJB.git
 cd .\TrabajoFinalSAPA_IKJB
 pip install flask
+pip install opencv_python
+pip install matplotlib 
+pip install mtcnn
+pip install tensorflow
+pip install transformers
+pip install torch
 ```
 ## Ejecucion en local
 
 ```bash
-cd .\TrabajoFinalSAPA_IKJB
-python .\app\app.py
+flask --app guiribot run --debug
+```
+
+## Inicializar BBDD
+
+```bash
+flask --app guiribot init-db
 ```

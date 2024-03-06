@@ -10,7 +10,7 @@ Este fichero WSGI hace de puente entre Apache y la app Flask.
 
 # Añade el directorio de la app al path de Python. Esto es necesario para que el
 # intérprete de Python pueda encontrar y cargar la app Flask correctamente.
-sys.path.insert(0,"/var/www/html/app/")
+sys.path.insert(0,"/var/www/html/guiribot/")
 
 # Configura logging básico. Esto asegura que los errores y mensajes de la app
 # se escriban en los logs de Apache.
@@ -24,5 +24,5 @@ logging.basicConfig(stream=sys.stderr)
 # Importa la app Flask.
 # from app: nombre del fichero Python de la app
 # import app: nombre de la variable que contiene la app Flask. app = Flask(__name__)
-from app import app as application
+from guiribot import app as application
 
