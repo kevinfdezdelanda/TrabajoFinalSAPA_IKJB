@@ -213,3 +213,91 @@ nav h1{
 .dropdown-content a:hover {
     background-color: #f1f1f1;
 }
+
+/*ChatBot*/
+html, body {
+    height: 100%;
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #222121; /* Fondo negro sólido */
+    overflow: hidden; /* Evita el desplazamiento del cuerpo entero */
+}
+
+#chatContainer {
+    position: relative;
+    width: 100%; /* Ocupa todo el ancho para centrar internamente los elementos */
+    height: 100%;
+    display: flex;
+    flex-direction: column; /* Alinea verticalmente los elementos internos */
+}
+
+#messages {
+    flex-grow: 1; /* Permite que #messages ocupe todo el espacio disponible */
+    width: 50%; /* Mismo ancho que #inputArea */
+    margin: 0 auto; /* Centra horizontalmente #messages */
+    overflow-y: auto;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+#inputArea {
+    width: 50%; /* Alinea el ancho con #messages */
+    margin: 0 auto; /* Centra horizontalmente #inputArea */
+    height: 60px;
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    box-sizing: border-box;
+}
+
+
+#userInput {
+    flex-grow: 1;
+    padding: 10px;
+    border: 1px solid #555;
+    border-radius: 5px;
+    color: black;
+    margin-right: 10px; /* Espacio entre el input y el botón */
+}
+
+#sendButton {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #8c9eab;
+    color: white;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+#sendButton:disabled {
+    background-color: #697478;
+}
+
+.userMessage {
+    text-align: right;
+    margin-right: 10px;
+    margin-top: 5px;
+    margin-left: 10px;
+    margin-bottom: 5px;
+    background-color: #90ee90; /* Un verde claro para el usuario */
+    color: black; /* Color de texto que contraste bien */
+    padding: 5px 10px;
+    border-radius: 10px;
+    max-width: 80%;
+    word-break: break-word;
+}
+
+.botMessage {
+    text-align: left;
+    margin-top: 5px;
+    margin-right: 10px;
+    margin-bottom: 5px;
+    margin-left: 10px;
+    background-color: #39daf0; /* Un tono de verde diferente para el bot */
+    color: black; /* Color de texto que contraste bien */
+    padding: 5px 10px;
+    border-radius: 10px;
+    max-width: 80%;
+    word-break: break-word;
+}

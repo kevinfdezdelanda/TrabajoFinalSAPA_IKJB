@@ -1,25 +1,19 @@
 <!DOCTYPE html> <!-- Declara que el documento es HTML5 -->
 <html>
 <head>
-    <title>BlenderBot Chat</title> <!-- Título de la pestaña del navegador -->
+    <title>GuiriBot Chat</title> <!-- Título de la pestaña del navegador -->
     <!-- Vincula un archivo de hoja de estilo CSS para el diseño de la página -->
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/layout.css') }}">
 </head>
 <body>
     <!-- Contenedor principal para la interfaz del chat -->
-    <div id="chatbox">
-        <!-- Botón para regresar a la página anterior -->
-        <button id="goBackButton" onclick="goBack()">Go Back</button>
-        <!-- División donde se mostrarán los mensajes -->
+    <div id="chatContainer">
         <div id="messages"></div>
-        <!-- Campo de entrada para escribir el mensaje del usuario -->
-        <input type="text" id="userInput" placeholder="Say something..." autocomplete="off" onkeypress="handleKeyPress(event)"/>
-        <!-- Botón para enviar el mensaje -->
-        <button id="sendButton" onclick="getReply()">Send</button>
+        <div id="inputArea">
+            <input type="text" id="userInput" placeholder="Say something..." autocomplete="off" onkeypress="handleKeyPress(event)"/>
+            <button id="sendButton" onclick="getReply()">Send</button>
+        </div>
     </div>
-
-    
-
     <!-- Scripts de JavaScript para manejar la lógica del chat -->
     <script>
         // Función que maneja la obtención y muestra de la respuesta del bot
@@ -39,21 +33,22 @@
                 // Realiza una solicitud al servidor para obtener la respuesta del bot
                 fetch(`/get?msg=${userText}`).then(response => response.json()).then(data => {
                     // Muestra la respuesta del bot en la interfaz
-                    let botReply = `<div class='botMessage'>BlenderBot: ${data.text}</div>`;
+                    let botReply = `<div class='botMessage'>GuiriBot: ${data.text}</div>`;
                     document.getElementById("messages").innerHTML += botReply;
-
+                    
                     // Crea un nuevo elemento de Audio a partir de la ruta del fichero WAV y lo reproduce.
                     let audioElement = new Audio(data.audio);
                     audioElement.play();
-
+                    
                     // Rehabilita el campo de entrada y el botón de enviar
                     document.getElementById("userInput").disabled = false;
                     document.getElementById("sendButton").disabled = false;
+                    
                     // Coloca el foco de nuevo en el campo de entrada
                     document.getElementById("userInput").focus();
                 }).catch(() => {
                     // Maneja errores mostrando un mensaje genérico
-                    let botReply = `<div class='botMessage'>BlenderBot: I'm having trouble responding right now.</div>`;
+                    let botReply = `<div class='botMessage'>GuiriBot: I'm having trouble responding right now.</div>`;
                     document.getElementById("messages").innerHTML += botReply;
                     // Rehabilita el campo de entrada y el botón de enviar
                     document.getElementById("userInput").disabled = false;
@@ -71,11 +66,6 @@
                 // Llama a getReply para procesar y enviar el mensaje
                 getReply();
             }
-        }
-
-        // Función para regresar a la página anterior en el historial del navegador
-        function goBack() {
-            window.history.back();
         }
         
     </script>

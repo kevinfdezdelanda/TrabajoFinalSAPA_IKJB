@@ -40,7 +40,7 @@ buffer = io.BytesIO()
 sf.write(buffer, speech["audio"], samplerate=speech["sampling_rate"], format='WAV')
 buffer.seek(0)  # Regresar al inicio del buffer para la lectura
 # Guardado fichero por si queremos guardarlos de forma permanente.
-sf.write(f"app/wav/{voz}-{texto}.wav", speech["audio"], samplerate=speech["sampling_rate"])
+sf.write(f"guiribot/wav/{voz}-{texto}.wav", speech["audio"], samplerate=speech["sampling_rate"])
 # Respuesta a la petición POST
         # return Response(buffer, mimetype="audio/wav")
     # return render_template("/ruta/a/la/pagina/pagina.html")

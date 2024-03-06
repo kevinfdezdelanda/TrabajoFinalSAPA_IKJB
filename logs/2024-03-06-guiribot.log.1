@@ -1,4 +1,52 @@
-2024-03-06 18:11:38,127 - guiribot - ERROR - Exception on /get [GET]
+2024-03-06 15:58:41,178 - guiribot - ERROR - Error en la ruta: 404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+2024-03-06 15:59:58,373 - guiribot - ERROR - Error en la ruta: 404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+2024-03-06 16:00:02,545 - guiribot - ERROR - Error en la ruta: 404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+2024-03-06 16:00:17,937 - guiribot - ERROR - Error en la ruta: 404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+2024-03-06 16:07:45,581 - guiribot - INFO - Usuario kevin loggeado
+2024-03-06 16:07:49,821 - guiribot - INFO - Usuario None: logout
+2024-03-06 16:08:51,421 - guiribot - INFO - Usuario prueba33 registrado
+2024-03-06 16:09:46,329 - guiribot - INFO - Usuario kevin loggeado
+2024-03-06 16:09:48,042 - guiribot - INFO - Usuario kevin: logout
+2024-03-06 16:11:38,035 - guiribot - INFO - Usuario kevin loggeado
+2024-03-06 17:11:52,761 - guiribot - WARNING - Usuario badr no encontrado
+2024-03-06 17:12:07,245 - guiribot - INFO - Usuario badr: logout
+2024-03-06 17:12:13,241 - guiribot - WARNING - Usuario badr no encontrado
+2024-03-06 17:12:26,425 - guiribot - INFO - Usuario badr2 registrado
+2024-03-06 17:12:37,203 - guiribot - INFO - Usuario badr2 loggeado
+2024-03-06 17:12:37,731 - guiribot - INFO - Usuario badr2 loggeado
+2024-03-06 17:12:53,748 - guiribot - ERROR - Error en la ruta: 404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+2024-03-06 17:14:04,903 - guiribot - ERROR - Error en la ruta: 404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+2024-03-06 17:25:31,003 - guiribot - INFO - Usuario badr2: logout
+2024-03-06 17:25:56,480 - guiribot - INFO - Usuario badr3 registrado
+2024-03-06 17:26:05,345 - guiribot - INFO - Usuario badr3 loggeado
+2024-03-06 17:41:01,541 - guiribot - ERROR - Error en la ruta: 404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+2024-03-06 17:41:22,470 - guiribot - INFO - Usuario badr4 registrado
+2024-03-06 17:41:32,073 - guiribot - INFO - Usuario badr4 loggeado
+2024-03-06 17:50:47,222 - guiribot - INFO - Usuario badr4: logout
+2024-03-06 17:50:59,583 - guiribot - INFO - Usuario badr5 registrado
+2024-03-06 17:51:10,764 - guiribot - INFO - Usuario badr5 loggeado
+2024-03-06 18:02:29,317 - guiribot - INFO - Usuario badr5: logout
+2024-03-06 18:02:57,327 - guiribot - INFO - Usuario badr5 loggeado
+2024-03-06 18:02:59,229 - guiribot - INFO - Usuario badr5 loggeado
+2024-03-06 18:03:13,074 - guiribot - ERROR - Exception on /get [GET]
+Traceback (most recent call last):
+  File "C:\Users\icjardin\anaconda3\envs\proyecto\Lib\site-packages\flask\app.py", line 1463, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\icjardin\anaconda3\envs\proyecto\Lib\site-packages\flask\app.py", line 872, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\icjardin\anaconda3\envs\proyecto\Lib\site-packages\flask\app.py", line 870, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\icjardin\anaconda3\envs\proyecto\Lib\site-packages\flask\app.py", line 855, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\icjardin\Desktop\TrabajoFinalSAPA_IKJB\guiribot\chatbot.py", line 70, in get_bot_response
+    speech = synthesiser(reply, forward_params={"speaker_embeddings": speaker_embedding})
+             ^^^^^^^^^^^
+NameError: name 'synthesiser' is not defined
+2024-03-06 18:06:51,146 - guiribot - ERROR - Exception on /get [GET]
 Traceback (most recent call last):
   File "C:\Users\icjardin\anaconda3\envs\proyecto\Lib\site-packages\flask\app.py", line 1463, in wsgi_app
     response = self.full_dispatch_request()
@@ -22,8 +70,8 @@ Traceback (most recent call last):
                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
   File "C:\Users\icjardin\anaconda3\envs\proyecto\Lib\site-packages\soundfile.py", line 1216, in _open
     raise LibsndfileError(err, prefix="Error opening {0!r}: ".format(self.name))
-soundfile.LibsndfileError: Error opening 'app/wav/1709745098-1270108.wav': System error.
-2024-03-06 18:16:05,883 - guiribot - ERROR - Exception on /get [GET]
+soundfile.LibsndfileError: Error opening 'app/wav/1709744811-1461644.wav': System error.
+2024-03-06 18:08:16,226 - guiribot - ERROR - Exception on /get [GET]
 Traceback (most recent call last):
   File "C:\Users\icjardin\anaconda3\envs\proyecto\Lib\site-packages\flask\app.py", line 1463, in wsgi_app
     response = self.full_dispatch_request()
@@ -47,8 +95,8 @@ Traceback (most recent call last):
                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
   File "C:\Users\icjardin\anaconda3\envs\proyecto\Lib\site-packages\soundfile.py", line 1216, in _open
     raise LibsndfileError(err, prefix="Error opening {0!r}: ".format(self.name))
-soundfile.LibsndfileError: Error opening 'app/wav/1709745365-8831232.wav': System error.
-2024-03-06 18:19:48,539 - guiribot - ERROR - Exception on /get [GET]
+soundfile.LibsndfileError: Error opening 'app/wav/1709744896-2260065.wav': System error.
+2024-03-06 18:10:27,083 - guiribot - ERROR - Exception on /get [GET]
 Traceback (most recent call last):
   File "C:\Users\icjardin\anaconda3\envs\proyecto\Lib\site-packages\flask\app.py", line 1463, in wsgi_app
     response = self.full_dispatch_request()
@@ -72,35 +120,4 @@ Traceback (most recent call last):
                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
   File "C:\Users\icjardin\anaconda3\envs\proyecto\Lib\site-packages\soundfile.py", line 1216, in _open
     raise LibsndfileError(err, prefix="Error opening {0!r}: ".format(self.name))
-soundfile.LibsndfileError: Error opening 'app/wav/1709745588-5393934.wav': System error.
-2024-03-06 18:20:29,215 - guiribot - ERROR - Exception on /get [GET]
-Traceback (most recent call last):
-  File "C:\Users\icjardin\anaconda3\envs\proyecto\Lib\site-packages\flask\app.py", line 1463, in wsgi_app
-    response = self.full_dispatch_request()
-               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\icjardin\anaconda3\envs\proyecto\Lib\site-packages\flask\app.py", line 872, in full_dispatch_request
-    rv = self.handle_user_exception(e)
-         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\icjardin\anaconda3\envs\proyecto\Lib\site-packages\flask\app.py", line 870, in full_dispatch_request
-    rv = self.dispatch_request()
-         ^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\icjardin\anaconda3\envs\proyecto\Lib\site-packages\flask\app.py", line 855, in dispatch_request
-    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\icjardin\Desktop\TrabajoFinalSAPA_IKJB\guiribot\chatbot.py", line 86, in get_bot_response
-    sf.write(nombre_fichero, speech["audio"], samplerate=speech["sampling_rate"])
-  File "C:\Users\icjardin\anaconda3\envs\proyecto\Lib\site-packages\soundfile.py", line 343, in write
-    with SoundFile(file, 'w', samplerate, channels,
-         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\icjardin\anaconda3\envs\proyecto\Lib\site-packages\soundfile.py", line 658, in __init__
-    self._file = self._open(file, mode_int, closefd)
-                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\icjardin\anaconda3\envs\proyecto\Lib\site-packages\soundfile.py", line 1216, in _open
-    raise LibsndfileError(err, prefix="Error opening {0!r}: ".format(self.name))
-soundfile.LibsndfileError: Error opening 'app/wav/1709745629-2155108.wav': System error.
-2024-03-06 18:22:34,589 - guiribot - ERROR - Error en la ruta: 404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
-2024-03-06 18:24:11,177 - guiribot - ERROR - Error en la ruta: 404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
-2024-03-06 18:26:10,561 - guiribot - ERROR - Error en la ruta: 404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
-2024-03-06 18:28:53,623 - guiribot - ERROR - Error en la ruta: 404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
-2024-03-06 18:29:29,470 - guiribot - ERROR - Error en la ruta: 404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
-2024-03-06 18:31:26,380 - guiribot - ERROR - Error en la ruta: 404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+soundfile.LibsndfileError: Error opening 'app/wav/1709745027-0838547.wav': System error.

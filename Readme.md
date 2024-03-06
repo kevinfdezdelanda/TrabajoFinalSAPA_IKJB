@@ -29,11 +29,13 @@ pip install opencv_python
 pip install matplotlib 
 pip install mtcnn
 pip install tensorflow
+pip install transformers
+pip install torch
 ```
 ## Ejecucion en local
 
 ```bash
-flask --app app run --debug
+flask --app guiribot run --debug
 ```
 
 ## Inicializar BBDD
