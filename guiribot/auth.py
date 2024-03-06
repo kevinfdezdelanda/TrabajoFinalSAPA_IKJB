@@ -6,6 +6,7 @@ from matplotlib import pyplot as plt
 from mtcnn.mtcnn import MTCNN
 import numpy as np
 from PIL import Image
+from guiribot.logger import app_logger
 
 from werkzeug.utils import secure_filename
 
@@ -14,7 +15,7 @@ from flask import (
 )
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from app.db import get_db
+from guiribot.db import get_db
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 
@@ -35,7 +36,8 @@ def register():
             error = 'Img requerida'
 
         if username and existe_usuario(username):
-           error = f"Usuario ya registrado"
+            app_logger.warning(f"Usuario {username} ya registrado")    
+            error = f"Usuario ya registrado"
 
         if error is None:
             
@@ -50,6 +52,7 @@ def register():
                 faces = MTCNN().detect_faces(img)
                 if (len(faces) == 0):
                     error = "Cara no detectada"
+                    app_logger.warning(f"Cara del usuario {username} no encontrada")
                 else:
                     # Voy guardando las caras en su carpeta (users_img)
                     pic = face2(img,faces)
@@ -71,12 +74,14 @@ def register():
                         (username, img_binary_data),
                     )
                     db.commit()
-                        
+                    
+                    app_logger.info(f"Usuario {username} registrado")    
                     return redirect(url_for("auth.login"))
 
 
-            except db.IntegrityError:
-                error = f"Usuario ya registrado"
+            except:
+                app_logger.error(f"Error al registrar el usuario {username}")    
+                error = f"Error al registrar el usuario"
                 
         flash(error)
 
@@ -101,6 +106,7 @@ def login():
             
             if img_db is None:
                 error = 'Usuario no encontrado'
+                app_logger.warning(f"Usuario {username} no encontrado")    
             else:
                 img_stream = img_file.read()
 
@@ -113,6 +119,7 @@ def login():
                 
                 if(len(faces) == 0):
                     error = 'Error: Cara no detectada'
+                    app_logger.warning(f"Cara del usuario {username} no encontrada")
                 else:
                     # Voy guardando las caras en su carpeta (users_img)
                     img_login = face2(img,faces)
@@ -124,8 +131,10 @@ def login():
                     if comp >= 0.80:
                         session.clear()
                         session['username'] = username
+                        app_logger.info(f"Usuario {username} loggeado")
                         return redirect(url_for('index'))
                     else:
+                        app_logger.warning(f"Usuario {username}: reconocimiento facial fallido")
                         error = 'Reconocimiento facial fallido'
 
         flash(error)
@@ -143,6 +152,7 @@ def load_logged_in_user():
         
 @bp.route('/logout')
 def logout():
+    app_logger.info(f"Usuario {session.get('username')}: logout")
     session.clear()
     return redirect(url_for('index'))
 
@@ -169,16 +179,6 @@ def write_file(data, path):
     # Convert binary data to proper format and write it on your computer
     with open(path, 'wb') as file:
         file.write(data)
-        
-def face( ruta_img, data, faces):
-    for i in range(len(faces)):
-        x1, y1, ancho, alto = faces[i]["box"]
-        x2, y2 = x1 + ancho, y1 + alto
-        # plt.subplot(1,len(faces), i + 1)
-        # plt.axis("off")
-        face = cv2.resize(data[y1:y2, x1:x2],(150,200), interpolation=cv2.INTER_CUBIC)
-        cv2.imwrite(ruta_img, face)
-        # plt.imshow(data[y1:y2, x1:x2])
 
 # Devuleve la primera cara encontrada
 def face2(data, faces):
