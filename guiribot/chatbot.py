@@ -3,8 +3,8 @@ from flask import (
 )
 from werkzeug.exceptions import abort
 
-from app.auth import login_required
-from app.db import get_db
+from guiribot.auth import login_required
+from guiribot.db import get_db
 
 bp = Blueprint('chatbot', __name__)
 

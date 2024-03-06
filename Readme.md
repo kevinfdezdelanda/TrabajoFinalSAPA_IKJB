@@ -39,5 +39,5 @@ flask --app app run --debug
 ## Inicializar BBDD
 
 ```bash
-flask --app app init-db
+flask --app guiribot init-db
 ```
