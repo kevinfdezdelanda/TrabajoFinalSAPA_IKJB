@@ -6,7 +6,7 @@ from transformers import BlenderbotTokenizer, BlenderbotForConditionalGeneration
 from werkzeug.exceptions import abort
 from datasets import load_dataset
 import torch
-# import torchaudio
+import torchaudio
 import soundfile as sf
 import time
 import os
@@ -15,6 +15,9 @@ from guiribot.db import get_db
 
 bp = Blueprint('chatbot', __name__)
 
+processor_speechrecognition = Wav2Vec2Processor.from_pretrained("facebook/wav2vec2-base-960h")
+
+model_speechrecognition = Wav2Vec2ForCTC.from_pretrained("facebook/wav2vec2-base-960h")
 
 # Define el nombre del modelo que se va a utilizar. En este caso, es 'facebook/blenderbot-400M-distill'
 model_name = 'facebook/blenderbot-400M-distill'
@@ -92,6 +95,45 @@ def get_bot_response():  # Define la función que maneja las solicitudes en esta
 @bp.route('/guiribot/wav/<path:filename>')
 def serve_wav(filename):
     return send_from_directory('wav', filename)
+
+@bp.route('/upload_audio', methods=['POST'])
+def upload_audio():
+    # Asegúrate de que hay un archivo en la solicitud
+    if 'audio' in request.files:
+        audio = request.files['audio']
+        # Define el directorio de destino
+        save_path = 'guiribot\\wav\\in'
+        # Asegúrate de que el directorio existe
+        os.makedirs(save_path, exist_ok=True)
+        # Construye la ruta completa donde se guardará el archivo
+        filepath = os.path.join(save_path, audio.filename)
+        # filepath = save_path / audio.filename
+        
+        # Guarda el archivo
+        audio.save(filepath)
+        
+        target_sampling_rate = 16_000
+    
+        # waveform, sampling_rate = sf.read(buffer, dtype="float32")
+        # waveform = torch.tensor(waveform)
+        waveform, sampling_rate = torchaudio.load(filepath)
+        
+        if sampling_rate != target_sampling_rate:
+            resampler = torchaudio.transforms.Resample(orig_freq=sampling_rate, new_freq=target_sampling_rate)
+            waveform = resampler(waveform)
+        
+        inputs = processor_speechrecognition(waveform.squeeze(0), return_tensors="pt", sampling_rate=16_000).input_values
+        with torch.no_grad():
+            logits = model_speechrecognition(inputs).logits
+        predicted_ids = torch.argmax(logits, dim=-1)
+        transcription = processor_speechrecognition.batch_decode(predicted_ids)[0]
+
+        # Utilizar la transcripción como entrada para el chatbot
+        return get_bot_response(transcription)
+        
+        
+    else:
+        return jsonify({'error': 'No se encontró el archivo de audio en la solicitud'}), 400
 
 # Verifica si el script se ejecuta como programa principal y no como módulo importado.
 if __name__ == "__main__":

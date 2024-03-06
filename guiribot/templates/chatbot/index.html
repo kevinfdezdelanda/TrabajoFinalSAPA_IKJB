@@ -16,6 +16,55 @@
     </div>
     <!-- Scripts de JavaScript para manejar la lógica del chat -->
     <script>
+        let mediaRecorder;
+        let audioChunks = [];
+
+        function startRecording() {
+            navigator.mediaDevices.getUserMedia({ audio: true })
+                .then(stream => {
+                    mediaRecorder = new MediaRecorder(stream);
+                    mediaRecorder.start();
+
+                    mediaRecorder.addEventListener("dataavailable", event => {
+                        audioChunks.push(event.data);
+                    });
+
+                    mediaRecorder.addEventListener("stop", () => {
+                        const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                        audioChunks = []; // Clear the chunks for next recording
+
+                        // Here you can send the audioBlob to your server for further processing
+                        sendAudioToServer(audioBlob);
+                    });
+
+                    // Update the recording button to allow stopping the recording
+                    document.getElementById("recordButton").innerText = "Stop Recording";
+                    document.getElementById("recordButton").onclick = stopRecording;
+                });
+        }
+
+        function stopRecording() {
+            mediaRecorder.stop();
+            // Reset the button to allow recording again
+            document.getElementById("recordButton").innerText = "Record";
+            document.getElementById("recordButton").onclick = startRecording;
+        }
+
+        function sendAudioToServer(audioBlob) {
+            const formData = new FormData();
+            formData.append("audio", audioBlob, "audio.wav");
+        
+            fetch("/upload_audio", { method: "POST", body: formData })
+                .then(response => response.json())
+                .then(data => {
+                    console.log("Audio enviado con éxito:", data);
+                    // Aquí puedes manejar la respuesta del servidor, como mostrar un mensaje de éxito
+                })
+                .catch(error => {
+                    console.error("Error al enviar el audio:", error);
+                });
+        }
+
         // Función que maneja la obtención y muestra de la respuesta del bot
         function getReply() {
             // Obtiene el mensaje del usuario desde el campo de entrada
