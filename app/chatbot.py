@@ -48,7 +48,7 @@ prohibited_keywords = [
 ]
 
 @bp.route('/')
-@login_required
+# @login_required
 def index():
     # db = get_db()
     # posts = db.execute(

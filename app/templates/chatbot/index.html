@@ -42,6 +42,7 @@
                     let botReply = `<div class='botMessage'>BlenderBot: ${data.text}</div>`;
                     document.getElementById("messages").innerHTML += botReply;
 
+                    // Crea un nuevo elemento de Audio a partir de la ruta del fichero WAV y lo reproduce.
                     let audioElement = new Audio(data.audio);
                     audioElement.play();
 
