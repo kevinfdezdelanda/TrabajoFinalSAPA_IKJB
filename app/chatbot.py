@@ -87,9 +87,6 @@ def get_bot_response():  # Define la función que maneja las solicitudes en esta
     # Devuelve la respuesta en formato JSON.
     return jsonify({"text": reply, "audio": nombre_fichero})
 
-@bp.route('/app/wav/<path:filename>')
-def serve_wav(filename):
-    return send_from_directory('/app/wav/', filename)
 
 # Verifica si el script se ejecuta como programa principal y no como módulo importado.
 if __name__ == "__main__":

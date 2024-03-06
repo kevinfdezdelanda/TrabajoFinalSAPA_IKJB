@@ -1,6 +1,6 @@
 import os
 
-from flask import  Flask, render_template, request
+from flask import  Flask, render_template, request, send_from_directory
 from . import auth, db,chatbot
 
 # create and configure the app
@@ -28,6 +28,11 @@ def query_string():
     print(request)
     print(request.args.get('param1'))
     return "ok"
+
+@app.route('/app/wav/<path:filename>')
+def serve_wav(filename):
+    return send_from_directory('wav', filename)
+
 
 app.register_blueprint(auth.bp)
 
