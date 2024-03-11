@@ -31,6 +31,9 @@ pip install mtcnn
 pip install tensorflow
 pip install transformers
 pip install torch
+pip install datasets
+pip install soundfile
+pip install SentencePiece
 ```
 ## Ejecucion en local
 

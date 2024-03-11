@@ -1,10 +1,11 @@
-{% extends 'base.html' %}
-
-{% block header %}
-  <h1>{% block title %}Login{% endblock %}</h1>
-{% endblock %}
-
-{% block content %}
+<!DOCTYPE html> <!-- Declara que el documento es HTML5 -->
+<html>
+<head>
+    <title>GuiriBot Chat</title> <!-- Título de la pestaña del navegador -->
+    <!-- Vincula un archivo de hoja de estilo CSS para el diseño de la página -->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/layout.css') }}">
+</head>
+<body>
     <!-- Contenedor principal para la interfaz del chat -->
     <div id="chatContainer">
         <div id="messages"></div>
@@ -22,7 +23,7 @@
             // Verifica si hay texto ingresado por el usuario
             if (userText) {
                 // Muestra el mensaje del usuario en la interfaz
-                let msg = `<div class='userMessage'>You: ${userText}</div>`;
+                let msg = `<div class='userMessage'><strong>You:</strong> ${userText}</div>`;
                 document.getElementById("messages").innerHTML += msg;
                 // Limpia el campo de entrada y lo deshabilita junto con el botón de enviar
                 document.getElementById("userInput").value = '';
@@ -32,7 +33,7 @@
                 // Realiza una solicitud al servidor para obtener la respuesta del bot
                 fetch(`/get?msg=${userText}`).then(response => response.json()).then(data => {
                     // Muestra la respuesta del bot en la interfaz
-                    let botReply = `<div class='botMessage'>GuiriBot: ${data.text}</div>`;
+                    let botReply = `<div class='botMessage'><strong>GuiriBot:</strong> ${data.text}</div>`;
                     document.getElementById("messages").innerHTML += botReply;
                     
                     // Crea un nuevo elemento de Audio a partir de la ruta del fichero WAV y lo reproduce.
@@ -68,4 +69,5 @@
         }
         
     </script>
-{% endblock %}
+</body>
+</html>
