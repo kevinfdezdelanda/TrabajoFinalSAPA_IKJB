@@ -10,29 +10,39 @@ import torchaudio
 import soundfile as sf
 import time
 import os
-# from app.auth import login_required
+from auth import login_required
 from guiribot.db import get_db
+from pydub import AudioSegment
 
 bp = Blueprint('chatbot', __name__)
 
-processor_speechrecognition = Wav2Vec2Processor.from_pretrained("facebook/wav2vec2-base-960h")
-
-model_speechrecognition = Wav2Vec2ForCTC.from_pretrained("facebook/wav2vec2-base-960h")
-
 # Define el nombre del modelo que se va a utilizar. En este caso, es 'facebook/blenderbot-400M-distill'
 model_name = 'facebook/blenderbot-400M-distill'
+
 # Crea una instancia del tokenizador para BlenderBot a partir del modelo preentrenado.
 tokenizer = BlenderbotTokenizer.from_pretrained(model_name)
+
 # Carga el modelo de generación condicional de BlenderBot a partir del modelo preentrenado.
 model = BlenderbotForConditionalGeneration.from_pretrained(model_name)
-# Modelo descargado por pipeline
+
+# Carga el procesador del modelo de reconocimiento de voz
+processor_speechrecognition = Wav2Vec2Processor.from_pretrained("facebook/wav2vec2-base-960h")
+
+# Carga el modelo de reconocimiento de voz
+model_speechrecognition = Wav2Vec2ForCTC.from_pretrained("facebook/wav2vec2-base-960h")
+
+# Descarga el modelo de síntesis de voz a través de pipeline
 synthesiser = pipeline("text-to-speech", "microsoft/speecht5_tts")
-# Datasets de voces
+
+# Descarga el dataset de embeddings de voces
 embeddings_dataset = load_dataset("Matthijs/cmu-arctic-xvectors", split="validation")
+
 # Índice del embedding de voz utilizado
 voz = 33
-# Voz embedding a tensor
+
+# Conversión de embedding de voz a tensor de PyTorch
 speaker_embedding = torch.tensor(embeddings_dataset[voz]["xvector"]).unsqueeze(0)
+
 # Palabras prohibidas
 prohibited_keywords = [
     "idiot", "moron", "dumb", "stupid", "imbecile", "fool", "jerk", "asshole", "retard", "twat",
@@ -91,46 +101,66 @@ def get_bot_response():  # Define la función que maneja las solicitudes en esta
     # Devuelve la respuesta del chatbot y la ruta al fichero de voz en formato JSON.
     return jsonify({"text": reply, "audio": nombre_fichero})
 
-# Maneja los ficheros wav. Creo que es solo para el entorno de develop, sino las peticiones GET a los fichero WAV no funcionan.
+# Maneja las peticiones de obtención de ficheros WAV.
 @bp.route('/guiribot/wav/<path:filename>')
 def serve_wav(filename):
     return send_from_directory('wav', filename)
 
+# Función que maneja la subida de audio al servidor y hace el reconocimiento de voz
 @bp.route('/upload_audio', methods=['POST'])
 def upload_audio():
-    # Asegúrate de que hay un archivo en la solicitud
+    
+    # Comprueba que haya un fichero en la petición
     if 'audio' in request.files:
         audio = request.files['audio']
-        # Define el directorio de destino
-        save_path = 'guiribot\\wav\\in'
-        # Asegúrate de que el directorio existe
-        os.makedirs(save_path, exist_ok=True)
-        # Construye la ruta completa donde se guardará el archivo
-        filepath = os.path.join(save_path, audio.filename)
-        # filepath = save_path / audio.filename
         
-        # Guarda el archivo
+        # Directiorio de destino
+        save_path = 'guiribot\\wav\\in'
+
+        # Construcción de la ruta completa, incluido el nombre del fichero
+        filepath = os.path.join(save_path, audio.filename)
+        
+        # Guarda el archivo original
         audio.save(filepath)
         
+        # Abre el fichero original
+        audio = AudioSegment.from_file(filepath, format="webm")
+        
+        # Directiorio de destino del fichero transformado
+        save_path = 'guiribot\\wav\\in\\transformed'
+
+        # Construcción de la ruta completa al fichero transformado
+        filepath = os.path.join(save_path, audio.filename)
+        
+        # Transforma el fichero original a WAV
+        audio.export(filepath, format="wav")
+        
+        # Se establece la tasa de muestreo. Son como los FPS pero de audio.
         target_sampling_rate = 16_000
     
-        # waveform, sampling_rate = sf.read(buffer, dtype="float32")
-        # waveform = torch.tensor(waveform)
+        # Se carga el fichero transformado
         waveform, sampling_rate = torchaudio.load(filepath)
         
+        # Si la tasa de muestreo del fichero no es la misma que la que acepta el modelo,
         if sampling_rate != target_sampling_rate:
+            
+            # entonces se remuestrea.
             resampler = torchaudio.transforms.Resample(orig_freq=sampling_rate, new_freq=target_sampling_rate)
             waveform = resampler(waveform)
         
+        # Se define el input, se procesa el fichero antes de pasarlo por el modelo
         inputs = processor_speechrecognition(waveform.squeeze(0), return_tensors="pt", sampling_rate=16_000).input_values
+        
+        # Se realiza la inferencia/predicción
         with torch.no_grad():
             logits = model_speechrecognition(inputs).logits
         predicted_ids = torch.argmax(logits, dim=-1)
+        
+        # Se obtiene la transcripción
         transcription = processor_speechrecognition.batch_decode(predicted_ids)[0]
 
-        # Utilizar la transcripción como entrada para el chatbot
+        # Se utiliza la transcripción como entrada para el chatbot
         return get_bot_response(transcription)
-        
         
     else:
         return jsonify({'error': 'No se encontró el archivo de audio en la solicitud'}), 400
