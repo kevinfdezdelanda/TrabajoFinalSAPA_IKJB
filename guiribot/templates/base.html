@@ -1,20 +1,25 @@
 <!doctype html>
-<title>{% block title %}{% endblock %} - Flaskr</title>
-<!--<link href="{{ url_for('static', filename='bootstrap-5.3.3-dist/css/bootstrap.min.css') }}" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-<script src="{{ url_for('static', filename='bootstrap-5.3.3-dist/js/bootstrap.min.js') }}" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>-->
-<link rel="stylesheet" href="{{ url_for('static', filename='css/layout.css') }}"/>
-<nav>
-  <h1>GuiriBot</h1>
-  {% if g.user %}
-  <div class="user-bubble">
-    <span class="username">{{ g.user }}</span>
-    <div class="dropdown-content">
-      <a href="{{ url_for('auth.logout') }}">Cerrar sesión</a>
+<html lang="en">
+  <head>
+    <title>{% block title %}{% endblock %} - guiribot</title>
+    <!--<link href="{{ url_for('static', filename='bootstrap-5.3.3-dist/css/bootstrap.min.css') }}" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="{{ url_for('static', filename='bootstrap-5.3.3-dist/js/bootstrap.min.js') }}" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>-->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/layout.css') }}"/>
+    <link rel="icon" href="{{ url_for('static', filename='images/logo_guiribot.png') }}" type="image/png">
+  </head>
+  <nav>
+    <div class="titulo"><img src="{{ url_for('static', filename='images/logo_guiribot.png') }}" alt="logo"><h1>GuiriBot</h1></div>
+    {% if g.user %}
+    <div class="user-bubble">
+      <span class="username">{{ g.user }}</span>
+      <div class="dropdown-content">
+        <a href="{{ url_for('auth.logout') }}">Cerrar sesión</a>
+      </div>
     </div>
-  </div>
-  {% endif %}
- 
-</nav>
-<body>
-  {% block content %}{% endblock %}
-</body>
+    {% endif %}
+  
+  </nav>
+  <body>
+    {% block content %}{% endblock %}
+  </body>
+</html>
