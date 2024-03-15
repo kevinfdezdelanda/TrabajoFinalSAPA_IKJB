@@ -1,6 +1,7 @@
 import datetime
 import logging
 from logging.handlers import RotatingFileHandler
+from pathlib import Path
 
 def setup_logger():
     # Crea un logger
@@ -13,7 +14,8 @@ def setup_logger():
     date_str = datetime.datetime.now().strftime("%Y-%m-%d")
 
     # Crear el nombre del archivo con la fecha
-    log_filename = f"logs/{date_str}-guiribot.log"
+    #log_filename = f"logs/{date_str}-guiribot.log"
+    log_filename = Path("logs") / f"{date_str}-guiribot.log"
     
     # Crea un handler de archivo que escribe logs con rotación
     handler = RotatingFileHandler(log_filename, maxBytes=10000, backupCount=3)
