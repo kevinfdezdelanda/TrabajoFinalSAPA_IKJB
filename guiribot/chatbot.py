@@ -69,6 +69,13 @@ def index():
     # ).fetchall()
     return render_template('chatbot/index.html')
 
+# La idea es que el usuario pueda introducir tanto texto como voz y que la respuesta del chat sea siempre igual,
+# mostrando la respuesta en texto y reproduciendo por voz.
+
+# generate_response_and_audio() -> Método común para ambos casos. Recibe un texto y generea la respuesta en texto y audio y la manda al back
+# get_bot_response() -> Para cuando el usuario pregunta por texto. Se recibe el texto por GET y lo manda a generate_response_and_audio()
+# upload_audio() -> Para cuando el usuario pregunta por voz. Recibe el fichero de audio por POST, lo procesa, y cuando obtiene la transcripción llama a generate_response_and_audio().
+
 @bp.route('/get')  # Define una ruta en el servidor web que escucha las solicitudes GET en la URL '/get'.
 def get_bot_response():  # Define la función que maneja las solicitudes en esta ruta.
     user_input = request.args.get('msg')  # Obtiene el mensaje del usuario desde los argumentos de la URL.
@@ -106,6 +113,7 @@ def generate_response_and_audio(user_input):
     sf.write(filepath, speech["audio"], samplerate=speech["sampling_rate"])
 
     # Devuelve la respuesta del chatbot y la ruta al fichero de voz en formato JSON.
+    # También devuelve el texto de entrada. Redundante para cuando la entrada es texto, necesario cuando la entrada es por voz.
     return jsonify({"text": reply, "audio": filepath.as_posix(), "transcription": user_input})
 
 # Maneja las peticiones de obtención de ficheros WAV.
