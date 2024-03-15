@@ -15,10 +15,10 @@ def setup_logger():
 
     # Crear el nombre del archivo con la fecha
     #log_filename = f"logs/{date_str}-guiribot.log"
-    log_filename = Path("logs") / f"{date_str}-guiribot.log"
+    log_filename = Path("guiribot/logs") / f"{date_str}-guiribot.log"
     
     # Crea un handler de archivo que escribe logs con rotación
-    handler = RotatingFileHandler(log_filename, maxBytes=10000, backupCount=3)
+    handler = RotatingFileHandler(str(log_filename), maxBytes=10000, backupCount=3)
 
     # Formato de los logs
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
