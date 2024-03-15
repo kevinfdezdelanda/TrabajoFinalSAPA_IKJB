@@ -1,5 +1,6 @@
 import functools
 from io import BytesIO
+import io
 import cv2
 from mtcnn.mtcnn import MTCNN
 import numpy as np
@@ -35,20 +36,22 @@ def register():
         if error is None:
             
             try:    
-                img_stream = img_file.read()
+                # Cargo la img y la recorto
+                img = Image.open(io.BytesIO(img_file.read()))
+                img_cropped = crop_center(img, 250, 330)
 
                 # Convertir los datos binarios a un array de NumPy para OpenCV
-                np_img = np.frombuffer(img_stream, np.uint8)
-                img = cv2.imdecode(np_img, cv2.IMREAD_COLOR)
+                np_img = np.array(img_cropped)
+                np_img_rgb = cv2.cvtColor(np_img, cv2.COLOR_BGR2RGB)
                 
                 # Detecto las caras de las img
-                faces = MTCNN().detect_faces(img)
+                faces = MTCNN().detect_faces(np_img_rgb)
                 if (len(faces) == 0):
                     error = "Cara no detectada"
                     app_logger.warning(f"Cara del usuario {username} no encontrada")
                 else:
                     # Voy guardando las caras en su carpeta (users_img)
-                    pic = face2(img,faces)
+                    pic = face2(np_img_rgb,faces)
                     
                     # Convertir el numpy array a un objeto de imagen PIL
                     img_pil = Image.fromarray(pic)
@@ -93,7 +96,7 @@ def login():
             error = 'Nombre de usuario requerido'
         elif not img_file:
             error = 'Img requerida'
-        print(img_file)
+        
         if error is None:
             img_db, id = obtener_foto_usuario(username)
             
@@ -101,21 +104,24 @@ def login():
                 error = 'Usuario no encontrado'
                 app_logger.warning(f"Usuario {username} no encontrado")    
             else:
-                img_stream = img_file.read()
-
+                # Recorto la imagen al marco que indica la web
+                img = Image.open(io.BytesIO(img_file.read()))
+                img_cropped = crop_center(img, 250, 330)
+                
                 # Convertir los datos binarios a un array de NumPy para OpenCV
-                np_img = np.frombuffer(img_stream, np.uint8)
-                img = cv2.imdecode(np_img, cv2.IMREAD_COLOR)
+                np_img = np.array(img_cropped)
+                np_img_rgb = cv2.cvtColor(np_img, cv2.COLOR_BGR2RGB)
+
                 
                 # Detecto las caras de las img
-                faces = MTCNN().detect_faces(img)
+                faces = MTCNN().detect_faces(np_img_rgb)
                 
                 if(len(faces) == 0):
                     error = 'Error: Cara no detectada'
                     app_logger.warning(f"Cara del usuario {username} no encontrada")
                 else:
                     # Voy guardando las caras en su carpeta (users_img)
-                    img_login = face2(img,faces)
+                    img_login = face2(np_img_rgb,faces)
                     
                     print(type(img_login), type(img_db))
                     comp = compatibility(img_login, img_db)
@@ -257,3 +263,15 @@ def existe_usuario(username):
         return True
     else:
         return False
+    
+def crop_center(img, crop_width, crop_height):
+    img_width, img_height = img.size
+
+    # Calcula las coordenadas del rectángulo central
+    left = (img_width - crop_width) / 2
+    top = (img_height - crop_height) / 2
+    right = (img_width + crop_width) / 2
+    bottom = (img_height + crop_height) / 2
+
+    # Recorta la imagen
+    return img.crop((left, top, right, bottom))
