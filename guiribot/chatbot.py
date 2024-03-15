@@ -74,6 +74,7 @@ def get_bot_response():  # Define la función que maneja las solicitudes en esta
     user_input = request.args.get('msg')  # Obtiene el mensaje del usuario desde los argumentos de la URL.
     return generate_response_and_audio(user_input)
 
+# Función que obtiene una pregunta al chatbot en string y genera la respuesta para el fronts
 def generate_response_and_audio(user_input):
     # Verifica si el mensaje del usuario contiene alguna palabra prohibida.
     if any(keyword in user_input.lower() for keyword in prohibited_keywords):

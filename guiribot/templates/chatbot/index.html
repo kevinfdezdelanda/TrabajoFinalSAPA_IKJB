@@ -14,12 +14,16 @@
     </div>
     <!-- Scripts de JavaScript para manejar la lógica del chat -->
     <script>
+        // Manejo de audio
         let mediaRecorder;
         let audioChunks = [];
 
+        // La función startRecording captura audio del usuario y lo envía a un servidor al detenerse, actualizando el botón de grabación para finalizar el proceso.
         function startRecording() {
             navigator.mediaDevices.getUserMedia({ audio: true })
                 .then(stream => {
+
+                    // Empieza la grabación
                     mediaRecorder = new MediaRecorder(stream);
                     mediaRecorder.start();
 
@@ -27,23 +31,23 @@
                         audioChunks.push(event.data);
                     });
 
+                    // Cuando se para la manda al back
                     mediaRecorder.addEventListener("stop", () => {
                         const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
-                        audioChunks = []; // Clear the chunks for next recording
+                        audioChunks = [];
 
-                        // Here you can send the audioBlob to your server for further processing
                         sendAudioToServer(audioBlob);
                     });
 
-                    // Update the recording button to allow stopping the recording
+                    // Reactiva el botón
                     document.getElementById("recordButton").innerText = "Stop Recording";
                     document.getElementById("recordButton").onclick = stopRecording;
                 });
         }
 
+        // La función stopRecording detiene la grabación de audio, reinicia el botón para permitir una nueva grabación y deshabilita otros controles de la interfaz.
         function stopRecording() {
             mediaRecorder.stop();
-            // Reset the button to allow recording again
             document.getElementById("recordButton").innerText = "Record";
             document.getElementById("recordButton").onclick = startRecording;
 
@@ -52,32 +56,40 @@
             document.getElementById("recordButton").disabled = true;
         }
 
+        // La función sendAudioToServer envía el audio grabado al servidor usando FormData, maneja la respuesta para mostrar mensajes y respuestas en la interfaz, y reactiva controles deshabilitados.
         function sendAudioToServer(audioBlob) {
+
             // Obtenemos el nombre de usuario
             var username = "{{ session['username'] }}"; // This needs to be dynamically rendered by Flask
 
             // Generar timestamp
-            const timestamp = new Date().toISOString().replace(/:/g, '-').split('.')[0]; // ISO string, colon replaced with dash, remove milliseconds
+            const timestamp = new Date().toISOString().replace(/:/g, '-').split('.')[0];
+
             // Creamos el nombre del fichero con formato: [user]-[timestamp].wav
             const filename = `${username}-${timestamp}.wav`;
 
             const formData = new FormData();
             formData.append("audio", audioBlob, filename);
         
+            // Se manda petición POST a /upload_audio para que el backend procese
             fetch("/upload_audio", { method: "POST", body: formData })
                 .then(response => response.json())
                 .then(data => {
                     console.log("Audio enviado con éxito:", data);
 
+                    // Mensaje del usuario transcrito
                     let userMessage = `<div class='userMessage'>You: ${data.transcription}</div>`;
                     document.getElementById("messages").innerHTML += userMessage;
 
+                    // Mensaje respuesta del chatbot
                     let botReply = `<div class='botMessage'>GuiriBot: ${data.text}</div>`;
                     document.getElementById("messages").innerHTML += botReply;
 
+                    // Reproducción del audio
                     let audioElement = new Audio(data.audio);
                     audioElement.play();
 
+                    // Habilita controles
                     document.getElementById("userInput").disabled = false;
                     document.getElementById("sendButton").disabled = false;
                     document.getElementById("recordButton").disabled = false;
