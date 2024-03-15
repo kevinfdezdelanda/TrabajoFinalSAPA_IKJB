@@ -31,6 +31,10 @@ pip install mtcnn
 pip install tensorflow
 pip install transformers
 pip install torch
+pip install datasets
+pip install pytest Flask-Testing
+pip install soundfile
+pip install SentencePiece
 ```
 ## Ejecucion en local
 
@@ -42,4 +46,10 @@ flask --app guiribot run --debug
 
 ```bash
 flask --app guiribot init-db
+```
+
+## Inicializar pytest
+
+```bash
+python -m pytest
 ```

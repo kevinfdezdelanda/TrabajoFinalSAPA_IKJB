@@ -1,0 +1,1 @@
+Carpeta donde se almacenan los fichero de audio respuesta (síntesis)

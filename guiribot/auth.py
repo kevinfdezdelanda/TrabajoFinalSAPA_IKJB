@@ -1,14 +1,10 @@
 import functools
 from io import BytesIO
-import os
 import cv2
-from matplotlib import pyplot as plt
 from mtcnn.mtcnn import MTCNN
 import numpy as np
 from PIL import Image
 from guiribot.logger import app_logger
-
-from werkzeug.utils import secure_filename
 
 from flask import (
     Blueprint, flash, g, redirect, render_template, request, session, url_for
@@ -18,9 +14,6 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from guiribot.db import get_db
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
-
-# CONFIG
-path = os.path.join(os.path.dirname(os.path.abspath(__file__)), f"users_img") # your path
 
 @bp.route('/register', methods=('GET', 'POST'))
 def register():

@@ -1,21 +1,94 @@
-<!DOCTYPE html> <!-- Declara que el documento es HTML5 -->
-<html>
-<head>
-    <title>GuiriBot Chat</title> <!-- Título de la pestaña del navegador -->
-    <!-- Vincula un archivo de hoja de estilo CSS para el diseño de la página -->
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/layout.css') }}">
-</head>
-<body>
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Login{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
     <!-- Contenedor principal para la interfaz del chat -->
     <div id="chatContainer">
         <div id="messages"></div>
         <div id="inputArea">
             <input type="text" id="userInput" placeholder="Say something..." autocomplete="off" onkeypress="handleKeyPress(event)"/>
             <button id="sendButton" onclick="getReply()">Send</button>
+            <button id="recordButton" onclick="startRecording()">Record</button>
         </div>
     </div>
     <!-- Scripts de JavaScript para manejar la lógica del chat -->
     <script>
+        let mediaRecorder;
+        let audioChunks = [];
+
+        function startRecording() {
+            navigator.mediaDevices.getUserMedia({ audio: true })
+                .then(stream => {
+                    mediaRecorder = new MediaRecorder(stream);
+                    mediaRecorder.start();
+
+                    mediaRecorder.addEventListener("dataavailable", event => {
+                        audioChunks.push(event.data);
+                    });
+
+                    mediaRecorder.addEventListener("stop", () => {
+                        const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                        audioChunks = []; // Clear the chunks for next recording
+
+                        // Here you can send the audioBlob to your server for further processing
+                        sendAudioToServer(audioBlob);
+                    });
+
+                    // Update the recording button to allow stopping the recording
+                    document.getElementById("recordButton").innerText = "Stop Recording";
+                    document.getElementById("recordButton").onclick = stopRecording;
+                });
+        }
+
+        function stopRecording() {
+            mediaRecorder.stop();
+            // Reset the button to allow recording again
+            document.getElementById("recordButton").innerText = "Record";
+            document.getElementById("recordButton").onclick = startRecording;
+
+            document.getElementById("userInput").disabled = true;
+            document.getElementById("sendButton").disabled = true;
+            document.getElementById("recordButton").disabled = true;
+        }
+
+        function sendAudioToServer(audioBlob) {
+            // Obtenemos el nombre de usuario
+            var username = "{{ session['username'] }}"; // This needs to be dynamically rendered by Flask
+
+            // Generar timestamp
+            const timestamp = new Date().toISOString().replace(/:/g, '-').split('.')[0]; // ISO string, colon replaced with dash, remove milliseconds
+            // Creamos el nombre del fichero con formato: [user]-[timestamp].wav
+            const filename = `${username}-${timestamp}.wav`;
+
+            const formData = new FormData();
+            formData.append("audio", audioBlob, filename);
+        
+            fetch("/upload_audio", { method: "POST", body: formData })
+                .then(response => response.json())
+                .then(data => {
+                    console.log("Audio enviado con éxito:", data);
+
+                    let userMessage = `<div class='userMessage'>You: ${data.transcription}</div>`;
+                    document.getElementById("messages").innerHTML += userMessage;
+
+                    let botReply = `<div class='botMessage'>GuiriBot: ${data.text}</div>`;
+                    document.getElementById("messages").innerHTML += botReply;
+
+                    let audioElement = new Audio(data.audio);
+                    audioElement.play();
+
+                    document.getElementById("userInput").disabled = false;
+                    document.getElementById("sendButton").disabled = false;
+                    document.getElementById("recordButton").disabled = false;
+                })
+                .catch(error => {
+                    console.error("Error al enviar el audio:", error);
+                });
+        }
+
         // Función que maneja la obtención y muestra de la respuesta del bot
         function getReply() {
             // Obtiene el mensaje del usuario desde el campo de entrada
@@ -29,6 +102,7 @@
                 document.getElementById("userInput").value = '';
                 document.getElementById("userInput").disabled = true;
                 document.getElementById("sendButton").disabled = true;
+                document.getElementById("recordButton").disabled = true;
 
                 // Realiza una solicitud al servidor para obtener la respuesta del bot
                 fetch(`/get?msg=${userText}`).then(response => response.json()).then(data => {
@@ -43,6 +117,7 @@
                     // Rehabilita el campo de entrada y el botón de enviar
                     document.getElementById("userInput").disabled = false;
                     document.getElementById("sendButton").disabled = false;
+                    document.getElementById("recordButton").disabled = false;
                     
                     // Coloca el foco de nuevo en el campo de entrada
                     document.getElementById("userInput").focus();
@@ -53,6 +128,7 @@
                     // Rehabilita el campo de entrada y el botón de enviar
                     document.getElementById("userInput").disabled = false;
                     document.getElementById("sendButton").disabled = false;
+                    document.getElementById("recordButton").disabled = false;
                     // Coloca el foco de nuevo en el campo de entrada
                     document.getElementById("userInput").focus();
                 });
@@ -69,5 +145,4 @@
         }
         
     </script>
-</body>
-</html>
+{% endblock %}

@@ -1,0 +1,1 @@
+Carpeta donde se almacenan los ficheros de audio capturados sin procesar
