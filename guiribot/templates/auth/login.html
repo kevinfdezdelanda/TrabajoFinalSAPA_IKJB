@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Login{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+<div class="registro-login">
+    <div>
+        <h2>Login</h2>
+        <div class="div-form">
+            {% for message in get_flashed_messages() %}
+                <div class="flash">{{ message }}</div>
+            {% endfor %}
+            <form id="login_form" method="post" enctype="multipart/form-data">
+                <div>
+                    <label for="username">Nombre de Usuario:</label>
+                    <input type="text" id="username" name="username" required>
+                </div>
+                <div class="cam">
+                    <div id="cam1" class="cam1">
+                        <video id="video" autoplay width="640" height="480"></video>
+                        <button type="button" id="botonCaptura">Capturar Foto</button>
+                        <img class="esquina esquina-sup-izq" src="{{ url_for('static', filename='images/esquina_cam.png') }}" alt="esquina1"/>
+                        <img class="esquina esquina-sup-derch" src="{{ url_for('static', filename='images/esquina_cam.png') }}" alt="esquina2"/>
+                        <img class="esquina esquina-inf-izq" src="{{ url_for('static', filename='images/esquina_cam.png') }}" alt="esquina3"/>
+                        <img class="esquina esquina-inf-derch" src="{{ url_for('static', filename='images/esquina_cam.png') }}" alt="esquina4"/>
+                        <img class="centro" src="{{ url_for('static', filename='images/centro_cam.png') }}" alt="centro"/>
+                    </div>
+                    <div id="cam2" style="display:none;">
+                        <canvas id="canvas" width="640" height="480"></canvas>
+                        <button type="button" id="botonRepetir">Repetir Foto</button>
+                    </div>
+                    <input type="file" name="imagen" id="imagen" style="display:none;">
+                </div>
+                <input type="submit" class="submit" value="login">
+            </form>
+        </div>
+    </div>
+    <a href="{{ url_for('auth.register') }}">¿No tienes cuenta? Registrate</a>
+</div>
+<script>
+    activo = true;
+    document.getElementById('botonCaptura').addEventListener('click', function() {
+        var video = document.getElementById('video');
+        var canvas = document.getElementById('canvas');
+        var cam2 = document.getElementById('cam2');
+        var cam1 = document.getElementById('cam1');
+        var context = canvas.getContext('2d');
+        context.drawImage(video, 0, 0, 640, 480);
+    
+        canvas.toBlob(function(blob) {
+            var newImg = document.createElement('img'),
+                url = URL.createObjectURL(blob);
+    
+            newImg.onload = function() {
+                // No longer need to read the blob so it's revoked
+                URL.revokeObjectURL(url);
+            };
+    
+            newImg.src = url;
+    
+            var file = new File([blob], "foto.png", {type: "image/png", lastModified: new Date()});
+            var dt = new DataTransfer();
+            dt.items.add(file);
+            document.getElementById('imagen').files = dt.files;
+
+        }, 'image/png');
+
+        activo = !activo;
+
+        if(activo) {
+            cam1.style.display = "inline-block";
+            cam2.style.display = "none";
+        }else{
+            cam2.style.display = "inline-block";
+            cam1.style.display = "none";
+        }
+    });
+
+    document.getElementById('botonRepetir').addEventListener('click', function() {
+        document.getElementById('imagen').files = null;
+
+        activo = !activo;
+
+        if(activo) {
+            cam1.style.display = "inline-block";
+            cam2.style.display = "none";
+        }else{
+            cam2.style.display = "inline-block";
+            cam1.style.display = "none";
+        }
+    });
+    
+    navigator.mediaDevices.getUserMedia({ video: true })
+        .then(function(stream) {
+            var video = document.getElementById('video');
+            video.srcObject = stream;
+        })
+        .catch(function(error) {
+            console.log("Error al acceder a la cámara: " + error);
+        });
+</script>
+{% endblock %}

@@ -1,8 +1,8 @@
-# Nombre del Proyecto de Especialización en IA y Big Data
+# Proyecto final Sapa Miar Pria
 
 ## Descripción
 
-Aplicación Web para Chatbot manejado con Procesamiento de Voz, Generación de imágenes basado en texto y Sistema de Acceso con Identificación Facial.
+Aplicación Web de Chatbot con Procesamiento de Voz, Generación de Imágenes y Sistema de Acceso mediante Identificación Facial
 
 ## Características
 
@@ -25,15 +25,21 @@ Proporciona instrucciones detalladas sobre cómo instalar y configurar el proyec
 git clone https://github.com/kevinfdezdelanda/TrabajoFinalSAPA_IKJB.git
 cd .\TrabajoFinalSAPA_IKJB
 pip install flask
+pip install opencv_python
+pip install matplotlib 
+pip install mtcnn
+pip install tensorflow
+pip install transformers
+pip install torch
 ```
 ## Ejecucion en local
 
 ```bash
-flask --app app run --debug
+flask --app guiribot run --debug
 ```
 
 ## Inicializar BBDD
 
 ```bash
-flask --app app init-db
+flask --app guiribot init-db
 ```
