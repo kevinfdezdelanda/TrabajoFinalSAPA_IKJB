@@ -1,5 +1,5 @@
 from flask import (
-Blueprint, flash, g, redirect, render_template, request, url_for, jsonify, Flask, send_from_directory, session
+    Blueprint, flash, g, redirect, render_template, request, url_for, jsonify, Flask, send_from_directory, session
 )
 from guiribot.auth import login_required
 from transformers import BlenderbotTokenizer, BlenderbotForConditionalGeneration, pipeline, Wav2Vec2ForCTC, Wav2Vec2Processor
@@ -13,6 +13,7 @@ import os
 from guiribot.auth import login_required
 from guiribot.db import get_db
 from pydub import AudioSegment
+from pathlib import Path
 
 bp = Blueprint('chatbot', __name__)
 
@@ -38,7 +39,7 @@ synthesiser = pipeline("text-to-speech", "microsoft/speecht5_tts")
 embeddings_dataset = load_dataset("Matthijs/cmu-arctic-xvectors", split="validation")
 
 # Índice del embedding de voz utilizado
-voz = 33
+voz = 5000
 
 # Conversión de embedding de voz a tensor de PyTorch
 speaker_embedding = torch.tensor(embeddings_dataset[voz]["xvector"]).unsqueeze(0)
@@ -94,16 +95,17 @@ def generate_response_and_audio(user_input):
     # Timestamp, reemplazando el punto por -
     ts = str(time.time()).replace(".", "-")
     
+    # Obtención del nombre de usuario
     username = session.get("username")
 
-    # Nombre del fichero de salida
-    nombre_fichero = f"guiribot/wav/{username}-{ts}.wav"
+    # Construcción de la ruta del fichero
+    filepath = Path(f"guiribot/wav") / f"{username}-{ts}.wav"
 
     # Guardado del fichero de salida
-    sf.write(nombre_fichero, speech["audio"], samplerate=speech["sampling_rate"])
+    sf.write(filepath, speech["audio"], samplerate=speech["sampling_rate"])
 
     # Devuelve la respuesta del chatbot y la ruta al fichero de voz en formato JSON.
-    return jsonify({"text": reply, "audio": nombre_fichero, "transcription": user_input})
+    return jsonify({"text": reply, "audio": filepath.as_posix(), "transcription": user_input})
 
 # Maneja las peticiones de obtención de ficheros WAV.
 @bp.route('/guiribot/wav/<path:filename>')
@@ -118,25 +120,20 @@ def upload_audio():
     if 'audio' in request.files:
         audio = request.files['audio']
         
-        # Directiorio de destino
-        save_path = 'guiribot\\wav\\in'
-        
+        # Nombre del fichero obtenido sin procesar
         filename = audio.filename
-
-        # Construcción de la ruta completa, incluido el nombre del fichero
-        filepath = os.path.join(save_path, filename)
+        
+        # Ruta al fichero
+        filepath = Path("guiribot/wav/in") / filename
         
         # Guarda el archivo original
         audio.save(filepath)
         
-        # Abre el fichero original
+        # Abre el fichero guardado
         audio = AudioSegment.from_file(filepath, format="webm")
         
-        # Directiorio de destino del fichero transformado
-        save_path = 'guiribot\\wav\\in\\transformed'
-
-        # Construcción de la ruta completa al fichero transformado
-        filepath = os.path.join(save_path, filename)
+        # Ruta al fichero nuevo convertido
+        filepath = Path("guiribot/wav/in/transformed") / filename
         
         # Transforma el fichero original a WAV
         audio.export(filepath, format="wav")

@@ -117,7 +117,6 @@ def login():
                     # Voy guardando las caras en su carpeta (users_img)
                     img_login = face2(img,faces)
                     
-                    print(type(img_login), type(img_db))
                     comp = compatibility(img_login, img_db)
                 
                     # Si la compatibilidad es mayor de 0.8 hara el login
