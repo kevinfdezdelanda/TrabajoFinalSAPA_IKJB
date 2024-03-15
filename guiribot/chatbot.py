@@ -10,7 +10,7 @@ import torchaudio
 import soundfile as sf
 import time
 import os
-from auth import login_required
+from guiribot.auth import login_required
 from guiribot.db import get_db
 from pydub import AudioSegment
 
@@ -71,7 +71,9 @@ def index():
 @bp.route('/get')  # Define una ruta en el servidor web que escucha las solicitudes GET en la URL '/get'.
 def get_bot_response():  # Define la función que maneja las solicitudes en esta ruta.
     user_input = request.args.get('msg')  # Obtiene el mensaje del usuario desde los argumentos de la URL.
+    return generate_response_and_audio(user_input)
 
+def generate_response_and_audio(user_input):
     # Verifica si el mensaje del usuario contiene alguna palabra prohibida.
     if any(keyword in user_input.lower() for keyword in prohibited_keywords):
         # Si encuentra una palabra prohibida, devuelve un mensaje de error.
@@ -99,7 +101,7 @@ def get_bot_response():  # Define la función que maneja las solicitudes en esta
     sf.write(nombre_fichero, speech["audio"], samplerate=speech["sampling_rate"])
 
     # Devuelve la respuesta del chatbot y la ruta al fichero de voz en formato JSON.
-    return jsonify({"text": reply, "audio": nombre_fichero})
+    return jsonify({"text": reply, "audio": nombre_fichero, "transcription": user_input})
 
 # Maneja las peticiones de obtención de ficheros WAV.
 @bp.route('/guiribot/wav/<path:filename>')
@@ -116,9 +118,11 @@ def upload_audio():
         
         # Directiorio de destino
         save_path = 'guiribot\\wav\\in'
+        
+        filename = audio.filename
 
         # Construcción de la ruta completa, incluido el nombre del fichero
-        filepath = os.path.join(save_path, audio.filename)
+        filepath = os.path.join(save_path, filename)
         
         # Guarda el archivo original
         audio.save(filepath)
@@ -130,7 +134,7 @@ def upload_audio():
         save_path = 'guiribot\\wav\\in\\transformed'
 
         # Construcción de la ruta completa al fichero transformado
-        filepath = os.path.join(save_path, audio.filename)
+        filepath = os.path.join(save_path, filename)
         
         # Transforma el fichero original a WAV
         audio.export(filepath, format="wav")
@@ -160,7 +164,7 @@ def upload_audio():
         transcription = processor_speechrecognition.batch_decode(predicted_ids)[0]
 
         # Se utiliza la transcripción como entrada para el chatbot
-        return get_bot_response(transcription)
+        return generate_response_and_audio(transcription.capitalize())
         
     else:
         return jsonify({'error': 'No se encontró el archivo de audio en la solicitud'}), 400

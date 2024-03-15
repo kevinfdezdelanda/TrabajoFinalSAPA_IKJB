@@ -48,6 +48,10 @@
             // Reset the button to allow recording again
             document.getElementById("recordButton").innerText = "Record";
             document.getElementById("recordButton").onclick = startRecording;
+
+            document.getElementById("userInput").disabled = true;
+            document.getElementById("sendButton").disabled = true;
+            document.getElementById("recordButton").disabled = true;
         }
 
         function sendAudioToServer(audioBlob) {
@@ -58,7 +62,19 @@
                 .then(response => response.json())
                 .then(data => {
                     console.log("Audio enviado con éxito:", data);
-                    // Aquí puedes manejar la respuesta del servidor, como mostrar un mensaje de éxito
+
+                    let userMessage = `<div class='userMessage'>You: ${data.transcription}</div>`;
+                    document.getElementById("messages").innerHTML += userMessage;
+
+                    let botReply = `<div class='botMessage'>GuiriBot: ${data.text}</div>`;
+                    document.getElementById("messages").innerHTML += botReply;
+
+                    let audioElement = new Audio(data.audio);
+                    audioElement.play();
+
+                    document.getElementById("userInput").disabled = false;
+                    document.getElementById("sendButton").disabled = false;
+                    document.getElementById("recordButton").disabled = false;
                 })
                 .catch(error => {
                     console.error("Error al enviar el audio:", error);
@@ -78,6 +94,7 @@
                 document.getElementById("userInput").value = '';
                 document.getElementById("userInput").disabled = true;
                 document.getElementById("sendButton").disabled = true;
+                document.getElementById("recordButton").disabled = true;
 
                 // Realiza una solicitud al servidor para obtener la respuesta del bot
                 fetch(`/get?msg=${userText}`).then(response => response.json()).then(data => {
@@ -92,6 +109,7 @@
                     // Rehabilita el campo de entrada y el botón de enviar
                     document.getElementById("userInput").disabled = false;
                     document.getElementById("sendButton").disabled = false;
+                    document.getElementById("recordButton").disabled = false;
                     
                     // Coloca el foco de nuevo en el campo de entrada
                     document.getElementById("userInput").focus();
@@ -102,6 +120,7 @@
                     // Rehabilita el campo de entrada y el botón de enviar
                     document.getElementById("userInput").disabled = false;
                     document.getElementById("sendButton").disabled = false;
+                    document.getElementById("recordButton").disabled = false;
                     // Coloca el foco de nuevo en el campo de entrada
                     document.getElementById("userInput").focus();
                 });
