@@ -1,5 +1,5 @@
 from flask import (
-Blueprint, flash, g, redirect, render_template, request, url_for, jsonify, Flask, send_from_directory
+Blueprint, flash, g, redirect, render_template, request, url_for, jsonify, Flask, send_from_directory, session
 )
 from guiribot.auth import login_required
 from transformers import BlenderbotTokenizer, BlenderbotForConditionalGeneration, pipeline, Wav2Vec2ForCTC, Wav2Vec2Processor
@@ -93,9 +93,11 @@ def generate_response_and_audio(user_input):
 
     # Timestamp, reemplazando el punto por -
     ts = str(time.time()).replace(".", "-")
+    
+    username = session.get("username")
 
     # Nombre del fichero de salida
-    nombre_fichero = f"guiribot/wav/{ts}.wav"
+    nombre_fichero = f"guiribot/wav/{username}-{ts}.wav"
 
     # Guardado del fichero de salida
     sf.write(nombre_fichero, speech["audio"], samplerate=speech["sampling_rate"])
@@ -173,4 +175,3 @@ def upload_audio():
 if __name__ == "__main__":
     # Ejecuta la aplicación Flask en modo de depuración.
     bp.run(debug=True)
-    

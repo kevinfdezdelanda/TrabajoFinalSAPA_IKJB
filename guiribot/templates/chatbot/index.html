@@ -55,8 +55,16 @@
         }
 
         function sendAudioToServer(audioBlob) {
+            // Obtenemos el nombre de usuario
+            var username = "{{ session['username'] }}"; // This needs to be dynamically rendered by Flask
+
+            // Generar timestamp
+            const timestamp = new Date().toISOString().replace(/:/g, '-').split('.')[0]; // ISO string, colon replaced with dash, remove milliseconds
+            // Creamos el nombre del fichero con formato: [user]-[timestamp].wav
+            const filename = `${username}-${timestamp}.wav`;
+
             const formData = new FormData();
-            formData.append("audio", audioBlob, "audio.wav");
+            formData.append("audio", audioBlob, filename);
         
             fetch("/upload_audio", { method: "POST", body: formData })
                 .then(response => response.json())
