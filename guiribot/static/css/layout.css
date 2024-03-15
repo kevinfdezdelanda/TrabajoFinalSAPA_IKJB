@@ -10,9 +10,19 @@ body{
     font-family: 'Arial';
 }
 
+nav .titulo{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+nav .titulo img{
+    height: 90px;
+}
+
 nav h1{
     font-size: 3rem;
-    width: 100%;
     text-align: center;
     margin: 2rem 0;
 }
@@ -286,6 +296,10 @@ html, body {
 
 #sendButton:disabled, #recordButton:disabled {
     background-color: #697478;
+}
+
+#recordButton{
+    margin-left: 10px;
 }
 
 .userMessage {
