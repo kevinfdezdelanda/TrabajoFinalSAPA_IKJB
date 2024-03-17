@@ -151,10 +151,9 @@
             // Verifica si la tecla presionada es Enter
             if (event.keyCode === 13) {
                 // Llama a getReply para procesar y enviar el mensaje
-                getReply();
+                getReply2();
             }
         }
-
         // Función Para enviar el prompt y craer imagenes
         function getReply2() {   
             let userInput = document.getElementById("userInput").value;
@@ -176,6 +175,7 @@
                 });
             }
         }
+
         
     </script>
 {% endblock %}

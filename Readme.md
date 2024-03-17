@@ -36,7 +36,9 @@ pip install pytest Flask-Testing
 pip install soundfile
 pip install SentencePiece
 ```
-## Ejecucion en local
+
+## Ejecucion en localclear
+
 
 ```bash
 flask --app guiribot run --debug
