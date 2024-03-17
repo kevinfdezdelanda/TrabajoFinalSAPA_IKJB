@@ -1,0 +1,73 @@
+<!DOCTYPE html> <!-- Declara que el documento es HTML5 -->
+<html>
+<head>
+    <title>GuiriBot Chat</title> <!-- Título de la pestaña del navegador -->
+    <!-- Vincula un archivo de hoja de estilo CSS para el diseño de la página -->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/layout.css') }}">
+</head>
+<body>
+    <!-- Contenedor principal para la interfaz del chat -->
+    <div id="chatContainer">
+        <div id="messages"></div>
+        <div id="inputArea">
+            <input type="text" id="userInput" placeholder="Say something..." autocomplete="off" onkeypress="handleKeyPress(event)"/>
+            <button id="sendButton" onclick="getReply()">Send</button>
+        </div>
+    </div>
+    <!-- Scripts de JavaScript para manejar la lógica del chat -->
+    <script>
+        // Función que maneja la obtención y muestra de la respuesta del bot
+        function getReply() {
+            // Obtiene el mensaje del usuario desde el campo de entrada
+            let userText = document.getElementById("userInput").value;
+            // Verifica si hay texto ingresado por el usuario
+            if (userText) {
+                // Muestra el mensaje del usuario en la interfaz
+                let msg = `<div class='userMessage'><strong>You:</strong> ${userText}</div>`;
+                document.getElementById("messages").innerHTML += msg;
+                // Limpia el campo de entrada y lo deshabilita junto con el botón de enviar
+                document.getElementById("userInput").value = '';
+                document.getElementById("userInput").disabled = true;
+                document.getElementById("sendButton").disabled = true;
+
+                // Realiza una solicitud al servidor para obtener la respuesta del bot
+                fetch(`/get?msg=${userText}`).then(response => response.json()).then(data => {
+                    // Muestra la respuesta del bot en la interfaz
+                    let botReply = `<div class='botMessage'><strong>GuiriBot:</strong> ${data.text}</div>`;
+                    document.getElementById("messages").innerHTML += botReply;
+                    
+                    // Crea un nuevo elemento de Audio a partir de la ruta del fichero WAV y lo reproduce.
+                    let audioElement = new Audio(data.audio);
+                    audioElement.play();
+                    
+                    // Rehabilita el campo de entrada y el botón de enviar
+                    document.getElementById("userInput").disabled = false;
+                    document.getElementById("sendButton").disabled = false;
+                    
+                    // Coloca el foco de nuevo en el campo de entrada
+                    document.getElementById("userInput").focus();
+                }).catch(() => {
+                    // Maneja errores mostrando un mensaje genérico
+                    let botReply = `<div class='botMessage'>GuiriBot: I'm having trouble responding right now.</div>`;
+                    document.getElementById("messages").innerHTML += botReply;
+                    // Rehabilita el campo de entrada y el botón de enviar
+                    document.getElementById("userInput").disabled = false;
+                    document.getElementById("sendButton").disabled = false;
+                    // Coloca el foco de nuevo en el campo de entrada
+                    document.getElementById("userInput").focus();
+                });
+            }
+        }
+
+        // Función para enviar el mensaje cuando se presione Enter
+        function handleKeyPress(event) {
+            // Verifica si la tecla presionada es Enter
+            if (event.keyCode === 13) {
+                // Llama a getReply para procesar y enviar el mensaje
+                getReply();
+            }
+        }
+        
+    </script>
+</body>
+</html>

@@ -3,3 +3,11 @@ transformers==4.38.2
 datasets==2.18
 torch==2.2.1
 soundfile==0.12.1
+flask
+opencv_python
+matplotlib 
+mtcnn
+tensorflow
+transformers
+torch
+torchaudio
