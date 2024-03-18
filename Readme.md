@@ -35,9 +35,10 @@ pip install datasets
 pip install pytest Flask-Testing
 pip install soundfile
 pip install SentencePiece
+pip install diffusers
 ```
 
-## Ejecucion en localclear
+## Ejecucion en local
 
 
 ```bash

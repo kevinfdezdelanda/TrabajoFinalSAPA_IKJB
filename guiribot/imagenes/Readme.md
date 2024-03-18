@@ -1,0 +1,1 @@
+Carpeta donde se guardan las imagenes generadas
