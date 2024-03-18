@@ -14,7 +14,7 @@ pytest==8.1.1
 soundfile==0.12.1
 tensorflow
 torch==2.2.0
-torchaudio==2.2.1
+torchaudio==2.2.0
 transformers==4.37.2
 sentencepiece==0.2.0
 Werkzeug==3.0.1
