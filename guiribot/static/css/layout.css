@@ -328,8 +328,17 @@ html, body {
     background-color: #83ecfb; /* Un tono de verde diferente para el bot */
     color: black; /* Color de texto que contraste bien */
     padding: 5px 10px;
-    border-radius: 0px 40px 40px 40px;
+    border-radius: 0px 30px 30px 30px;
     max-width: 80%;
     word-break: break-word;
     padding: 10px 30px;
+}
+
+.imgMessage {
+    max-width: fit-content;
+    padding: 20px 30px;
+}
+
+.imgMessage img {
+    border-radius: 10px;
 }

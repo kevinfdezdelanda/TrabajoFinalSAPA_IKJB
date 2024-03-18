@@ -175,6 +175,8 @@
                 document.getElementById("recordButton").disabled = true;
                 document.getElementById("sendButtonImage").disabled = true;
 
+                let msg2 = `<div class='botMessage'>Guiribot: Generating...</div>`;
+                document.getElementById("messages").innerHTML += msg2;
                 fetch("/generate-image", {
                     method: "POST",
                     headers: {
@@ -184,7 +186,7 @@
                 })
                 .then(response => response.json()) // Asumiendo que el servidor devuelve una imagen
                 .then(data => {
-                    let botReply = `<div class='botMessage'><img src=${data.image_url}></div>`;
+                    let botReply = `<div class='botMessage imgMessage'><img src=${data.image_url}></div>`;
                     document.getElementById("messages").innerHTML += botReply;
 
                     document.getElementById("userInput").disabled = false;
