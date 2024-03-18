@@ -28,10 +28,10 @@ except OSError:
 #     print(request.args.get('param1'))
 #     return "ok"
 
-# Maneja los ficheros wav. Creo que es solo para el entorno de develop, sino las peticiones GET a los fichero WAV no funcionan.
-@app.route('/app/wav/<path:filename>')
-def serve_wav(filename):
-    return send_from_directory('wav', filename)
+# Mejor integrado en chatbot.py
+# @app.route('/app/wav/<path:filename>')
+# def serve_wav(filename):
+#     return send_from_directory('wav', filename)
 
 
 app.register_blueprint(auth.bp)

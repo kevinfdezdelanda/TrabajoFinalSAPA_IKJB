@@ -21,20 +21,38 @@ Aplicación Web de Chatbot con Procesamiento de Voz, Generación de Imágenes y 
 
 Proporciona instrucciones detalladas sobre cómo instalar y configurar el proyecto en un entorno local. Incluye los pasos para instalar las dependencias, configurar bases de datos, etc.
 
+Para clonar el repositorio:
+
 ```bash
 git clone https://github.com/kevinfdezdelanda/TrabajoFinalSAPA_IKJB.git
 cd .\TrabajoFinalSAPA_IKJB
+```
+
+Para instalar dependencias mediante fichero de requerimientos:
+
+```bash
+pip install -r guiribot/requirements.txt
+```
+
+Instalación de dependencias de manera manual:
+
+```bash
 pip install flask
 pip install opencv_python
 pip install matplotlib 
 pip install mtcnn
 pip install tensorflow
 pip install transformers
-pip install torch
+pip install torch torchaudio
 pip install datasets
 pip install pytest Flask-Testing
 pip install soundfile
 pip install SentencePiece
+pip install click
+pip install numpy
+pip install pydub
+pip install Pillow
+pip install Werkzeug
 pip install diffusers
 ```
 
