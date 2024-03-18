@@ -53,9 +53,11 @@ pip install numpy
 pip install pydub
 pip install Pillow
 pip install Werkzeug
+pip install diffusers
 ```
 
 ## Ejecucion en local
+
 
 ```bash
 flask --app guiribot run --debug

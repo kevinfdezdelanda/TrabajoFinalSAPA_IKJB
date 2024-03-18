@@ -9,8 +9,8 @@
         <div id="inputArea">
             <input type="text" id="userInput" placeholder="Say something..." autocomplete="off" onkeypress="handleKeyPress(event)"/>
             <button id="sendButton" onclick="getReply()">Send</button>
+            <button id="sendButtonImage" onclick="getReply2()">Image</button>
             <button id="recordButton" onclick="startRecording()">Record</button>
-            <button id="sendButtonImage" onclick="getReply2()">Generate Image</button>
         </div>
     </div>
     <!-- Scripts de JavaScript para manejar la lógica del chat -->
@@ -55,7 +55,6 @@
             document.getElementById("userInput").disabled = true;
             document.getElementById("sendButton").disabled = true;
             document.getElementById("recordButton").disabled = true;
-            document.getElementById("sendButtonImage").disabled = true;
         }
 
         // La función sendAudioToServer envía el audio grabado al servidor usando FormData, maneja la respuesta para mostrar mensajes y respuestas en la interfaz, y reactiva controles deshabilitados.
@@ -95,7 +94,6 @@
                     document.getElementById("userInput").disabled = false;
                     document.getElementById("sendButton").disabled = false;
                     document.getElementById("recordButton").disabled = false;
-                    document.getElementById("sendButtonImage").disabled = false;
                 })
                 .catch(error => {
                     console.error("Error al enviar el audio:", error);
@@ -116,7 +114,6 @@
                 document.getElementById("userInput").disabled = true;
                 document.getElementById("sendButton").disabled = true;
                 document.getElementById("recordButton").disabled = true;
-                document.getElementById("sendButtonImage").disabled = true;
 
                 // Realiza una solicitud al servidor para obtener la respuesta del bot
                 fetch(`/get?msg=${userText}`).then(response => response.json()).then(data => {
@@ -132,7 +129,6 @@
                     document.getElementById("userInput").disabled = false;
                     document.getElementById("sendButton").disabled = false;
                     document.getElementById("recordButton").disabled = false;
-                    document.getElementById("sendButtonImage").disabled = false;
                     
                     // Coloca el foco de nuevo en el campo de entrada
                     document.getElementById("userInput").focus();
@@ -144,7 +140,6 @@
                     document.getElementById("userInput").disabled = false;
                     document.getElementById("sendButton").disabled = false;
                     document.getElementById("recordButton").disabled = false;
-                    document.getElementById("sendButtonImage").disabled = false;
                     // Coloca el foco de nuevo en el campo de entrada
                     document.getElementById("userInput").focus();
                 });
@@ -156,25 +151,13 @@
             // Verifica si la tecla presionada es Enter
             if (event.keyCode === 13) {
                 // Llama a getReply para procesar y enviar el mensaje
-                getReply();
+                getReply2();
             }
         }
-
         // Función Para enviar el prompt y craer imagenes
         function getReply2() {   
             let userInput = document.getElementById("userInput").value;
             if (userInput) {
-
-                let msg = `<div class='userMessage'>You: ${userInput}</div>`;
-                document.getElementById("messages").innerHTML += msg;
-
-                // Limpia el campo de entrada y lo deshabilita junto con el botón de enviar
-                document.getElementById("userInput").value = '';
-                document.getElementById("userInput").disabled = true;
-                document.getElementById("sendButton").disabled = true;
-                document.getElementById("recordButton").disabled = true;
-                document.getElementById("sendButtonImage").disabled = true;
-
                 fetch("/generate-image", {
                     method: "POST",
                     headers: {
@@ -182,18 +165,17 @@
                     },
                     body: JSON.stringify({ prompt: userInput })
                 })
-                .then(response => response.json()) // Asumiendo que el servidor devuelve una imagen
-                .then(data => {
-                    let botReply = `<div class='botMessage'><img src=${data.image_url}></div>`;
-                    document.getElementById("messages").innerHTML += botReply;
-
-                    document.getElementById("userInput").disabled = false;
-                    document.getElementById("sendButton").disabled = false;
-                    document.getElementById("recordButton").disabled = false;
-                    document.getElementById("sendButtonImage").disabled = false;
+                .then(response => response.blob()) // Asumiendo que el servidor devuelve una imagen
+                .then(blob => {
+                    // Crear una URL para la imagen y mostrarla en la página, por ejemplo
+                    const imageUrl = URL.createObjectURL(blob);
+                    const img = document.createElement("img");
+                    img.src = imageUrl;
+                    document.body.appendChild(img); // O añade la imagen a un contenedor específico
                 });
             }
         }
+
         
     </script>
 {% endblock %}
